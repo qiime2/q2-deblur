@@ -81,7 +81,7 @@ def workflow(demultiplexed_seqs: SingleLanePerSampleSingleEndFastqDirFmt,
 
 
 plugin = qiime.plugin.Plugin(
-    name='q2-deblur',
+    name='deblur',
     version=q2_deblur.__version__,
     website='https://github.com/biocore/deblur',
     package='q2_deblur',
