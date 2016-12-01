@@ -3,6 +3,10 @@ import tempfile
 import os
 import qiime.plugin
 import biom
+import skbio
+import subprocess
+import hashlib
+
 from q2_types import FeatureTable, Frequency
 from q2_types.per_sample_sequences import \
         SingleLanePerSampleSingleEndFastqDirFmt, FastqGzFormat
@@ -25,19 +29,55 @@ def workflow(demultiplexed_seqs: SingleLanePerSampleSingleEndFastqDirFmt,
              min_reads: int=0, 
              min_size: int=2, 
              negate: bool=False, 
-             keep_tmp_files: bool=False,
-             log_level: int=2,
-             jobs_to_start: int=1) -> (biom.Table, DNAIterator):
+             jobs_to_start: int=1,
+             hashed_feature_ids: bool=True) -> (biom.Table, DNAIterator):
 
     if error_dist is None:
         error_dist = get_default_error_profile()
 
     with tempfile.TemporaryDirectory() as tmp:
-        iter_view = demultiplexed_seqs.sequences.iter_views(FastqGzFormat)
+        seqs_fp = str(demultiplexed_seqs)
+        cmd = ['deblur', 'workflow', 
+               '--seqs-fp', seqs_fp,
+               '--output-dir', tmp,
+               '--mean-error', str(mean_error),
+               '--error-dist', ','.join([str(i) for i in error_dist]),
+               '--indel-prob', str(indel_prob),
+               '--indel-max', str(indel_max),
+               '--trim-length', str(trim_length),
+               '--min-reads', str(min_reads),
+               '--min-size', str(min_size),
+               '-w']  
+        if pos_ref_fp is not None:
+            cmd.append('--pos-ref-db')
+            cmd.append(pos_ref_fp)
+        
+        if neg_ref_fp is not None:
+            cmd.append('--neg-ref-db')
+            cmd.append(neg_ref_fp)
+        
+        if negate:
+            cmd.append('--negate')
+        
+        subprocess.run(cmd, check=True)
+        table = biom.load_table(os.path.join(tmp, 'final.biom'))
+        
+        # code adapted from q2-dada2
+        if hashed_feature_ids:
+            # Make feature IDs the md5 sums of the sequences.
+            fid_map = {id_: hashlib.md5(id_.encode('utf-8')).hexdigest()
+                       for id_ in table.ids(axis='observation')}
+            table.update_ids(fid_map, axis='observation', inplace=True)
 
-        for path, view in iter_view:
-            print(path)
-            #_single_sample(str(view), threads, tmp)
+            rep_sequences = DNAIterator((skbio.DNA(k, metadata={'id': v},
+                                                   lowercase='ignore')
+                                         for k, v in fid_map.items()))
+        else:
+            rep_sequences = DNAIterator(
+                (skbio.DNA(id_, metadata={'id': id_}, lowercase='ignore')
+                 for id_ in table.ids(axis='observation')))
+
+    return (table, rep_sequences)
 
 
 plugin = qiime.plugin.Plugin(
@@ -75,9 +115,8 @@ plugin.methods.register_function(
         'min_reads': qiime.plugin.Int,
         'min_size': qiime.plugin.Int,
         'negate': qiime.plugin.Bool,
-        'keep_tmp_files': qiime.plugin.Bool,
-        'log_level': qiime.plugin.Int,
-        'jobs_to_start': qiime.plugin.Int
+        'jobs_to_start': qiime.plugin.Int,
+        'hashed_feature_ids': qiime.plugin.Bool
     },
     outputs=[('table', FeatureTable[Frequency]),
              ('representative_sequences', FeatureData[Sequence])],

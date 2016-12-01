@@ -19,7 +19,7 @@ setup(
     # ready to develop your plugin, and add your own dependencies (if there are
     # any).
     install_requires=['qiime >= 2.0.5', 'pandas', 'q2-types >= 0.0.5',
-                      'deblur >= 0.1.2'],
+                      'deblur >= 0.1.5'],
     author="Daniel McDonald",
     author_email="mcdonadt@colorado.edu",
     description="Wrapper for Deblur",
