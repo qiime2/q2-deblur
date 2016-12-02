@@ -60,9 +60,12 @@ def workflow(demultiplexed_seqs: SingleLanePerSampleSingleEndFastqDirFmt,
             cmd.append('--negate')
         
         subprocess.run(cmd, check=True)
-        table = biom.load_table(os.path.join(tmp, 'final.biom'))
         
         # code adapted from q2-dada2
+        table = biom.load_table(os.path.join(tmp, 'final.biom'))
+        sid_map = {id_: id_.split('_')[0] for id_ in table.ids(axis='sample')}
+        table.update_ids(sid_map, axis='sample', inplace=True)
+        
         if hashed_feature_ids:
             # Make feature IDs the md5 sums of the sequences.
             fid_map = {id_: hashlib.md5(id_.encode('utf-8')).hexdigest()
