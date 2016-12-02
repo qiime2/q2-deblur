@@ -4,8 +4,10 @@ Wrapper for Deblur
 
 # Install
 
+```
 conda install -c bioconda VSEARCH MAFFT SortMeRNA==2.0 biom-format
 pip install deblur
+```
 
 # Example
 
