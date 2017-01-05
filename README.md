@@ -1,16 +1,3 @@
-# q2-deblur
+# Deblur QIIME 2 plugin
 
-Wrapper for Deblur
-
-# Install
-
-```
-conda install -c bioconda VSEARCH MAFFT SortMeRNA==2.0 biom-format
-pip install deblur
-```
-
-# Example
-
-```
-$ qiime deblur workflow --i-demultiplexed-seqs data.qza --o-table deblurred_table --o-representative-sequences deblurred_sequences
-```
+This package contains the Deblur QIIME 2 plugin. To learn how to use this, see https://qiime2.org.

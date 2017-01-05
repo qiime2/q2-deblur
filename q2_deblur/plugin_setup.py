@@ -18,19 +18,19 @@ import q2_deblur
 from deblur.deblurring import get_default_error_profile
 
 
-def workflow(demultiplexed_seqs: SingleLanePerSampleSingleEndFastqDirFmt,
-             pos_ref_fp: str=None,
-             neg_ref_fp: str=None,
-             mean_error: float=0.005, 
-             error_dist: str=None, 
-             indel_prob: float=0.01, 
-             indel_max: int=3,
-             trim_length: int=100, 
-             min_reads: int=0, 
-             min_size: int=2, 
-             negate: bool=False, 
-             jobs_to_start: int=1,
-             hashed_feature_ids: bool=True) -> (biom.Table, DNAIterator):
+def denoise(demultiplexed_seqs: SingleLanePerSampleSingleEndFastqDirFmt,
+            pos_ref_fp: str=None,
+            neg_ref_fp: str=None,
+            mean_error: float=0.005, 
+            error_dist: str=None, 
+            indel_prob: float=0.01, 
+            indel_max: int=3,
+            trim_length: int=100, 
+            min_reads: int=0, 
+            min_size: int=2, 
+            negate: bool=False, 
+            jobs_to_start: int=1,
+            hashed_feature_ids: bool=True) -> (biom.Table, DNAIterator):
 
     if error_dist is None:
         error_dist = get_default_error_profile()
@@ -103,7 +103,7 @@ plugin = qiime.plugin.Plugin(
 # develop your plugin.
 
 plugin.methods.register_function(
-    function=workflow,
+    function=denoise,
     inputs={
         'demultiplexed_seqs': SampleData[SequencesWithQuality]
     },
