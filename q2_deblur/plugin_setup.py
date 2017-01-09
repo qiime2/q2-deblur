@@ -95,12 +95,13 @@ plugin = qiime.plugin.Plugin(
     # Information on how the plugin should be cited should be provided as a
     # free text string via citation_text. If None is provided, users
     # will be told to use the plugin's website as a citation.
-    citation_text=None
+    citation_text=("Deblur rapidly resolves single-nucleotide community "
+                   "sequence patterns. Amnon Amir, Daniel McDonald, Jose "
+                   "A. Navas-Molina, Evguenia Kopylova, Jamie Morton, "
+                   "Zhenjiang Zech Xu, Eric P. Kightley, Luke R. Thompson, "
+                   "Embriette R. Hyde, Antonio Gonzalez, Rob Knight. mSystems "
+                   "(in press).")
 )
-
-# The next two code blocks are examples of how to register methods and
-# visualizers. Replace them with your own registrations when you are ready to
-# develop your plugin.
 
 plugin.methods.register_function(
     function=denoise,
