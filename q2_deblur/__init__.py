@@ -1,1 +1,3 @@
-__version__ = "0.0.7.dev0"
+import pkg_resources
+
+__version__ = pkg_resources.get_distribution('q2-deblur').version
