@@ -1,15 +1,14 @@
 import subprocess
 import tempfile
 import os
-import qiime.plugin
+import qiime2.plugin
 import biom
 import skbio
-import subprocess
 import hashlib
 
-from q2_types import FeatureTable, Frequency
+from q2_types.feature_table import FeatureTable, Frequency
 from q2_types.per_sample_sequences import \
-        SingleLanePerSampleSingleEndFastqDirFmt, FastqGzFormat
+        SingleLanePerSampleSingleEndFastqDirFmt
 from q2_types.per_sample_sequences import SequencesWithQuality
 from q2_types.feature_data import DNAIterator
 from q2_types.sample_data import SampleData
@@ -21,14 +20,14 @@ from deblur.deblurring import get_default_error_profile
 def denoise(demultiplexed_seqs: SingleLanePerSampleSingleEndFastqDirFmt,
             pos_ref_fp: str=None,
             neg_ref_fp: str=None,
-            mean_error: float=0.005, 
-            error_dist: str=None, 
-            indel_prob: float=0.01, 
+            mean_error: float=0.005,
+            error_dist: str=None,
+            indel_prob: float=0.01,
             indel_max: int=3,
-            trim_length: int=100, 
-            min_reads: int=0, 
-            min_size: int=2, 
-            negate: bool=False, 
+            trim_length: int=100,
+            min_reads: int=0,
+            min_size: int=2,
+            negate: bool=False,
             jobs_to_start: int=1,
             hashed_feature_ids: bool=True) -> (biom.Table, DNAIterator):
 
@@ -37,7 +36,7 @@ def denoise(demultiplexed_seqs: SingleLanePerSampleSingleEndFastqDirFmt,
 
     with tempfile.TemporaryDirectory() as tmp:
         seqs_fp = str(demultiplexed_seqs)
-        cmd = ['deblur', 'workflow', 
+        cmd = ['deblur', 'workflow',
                '--seqs-fp', seqs_fp,
                '--output-dir', tmp,
                '--mean-error', str(mean_error),
@@ -47,25 +46,25 @@ def denoise(demultiplexed_seqs: SingleLanePerSampleSingleEndFastqDirFmt,
                '--trim-length', str(trim_length),
                '--min-reads', str(min_reads),
                '--min-size', str(min_size),
-               '-w']  
+               '-w']
         if pos_ref_fp is not None:
             cmd.append('--pos-ref-db')
             cmd.append(pos_ref_fp)
-        
+
         if neg_ref_fp is not None:
             cmd.append('--neg-ref-db')
             cmd.append(neg_ref_fp)
-        
+
         if negate:
             cmd.append('--negate')
-        
+
         subprocess.run(cmd, check=True)
-        
+
         # code adapted from q2-dada2
         table = biom.load_table(os.path.join(tmp, 'final.biom'))
         sid_map = {id_: id_.split('_')[0] for id_ in table.ids(axis='sample')}
         table.update_ids(sid_map, axis='sample', inplace=True)
-        
+
         if hashed_feature_ids:
             # Make feature IDs the md5 sums of the sequences.
             fid_map = {id_: hashlib.md5(id_.encode('utf-8')).hexdigest()
@@ -83,7 +82,7 @@ def denoise(demultiplexed_seqs: SingleLanePerSampleSingleEndFastqDirFmt,
     return (table, rep_sequences)
 
 
-plugin = qiime.plugin.Plugin(
+plugin = qiime2.plugin.Plugin(
     name='deblur',
     version=q2_deblur.__version__,
     website='https://github.com/biocore/deblur',
@@ -109,21 +108,21 @@ plugin.methods.register_function(
         'demultiplexed_seqs': SampleData[SequencesWithQuality]
     },
     parameters={
-        'pos_ref_fp': qiime.plugin.Str,
-        'neg_ref_fp': qiime.plugin.Str,
-        'mean_error': qiime.plugin.Float,
-        'error_dist': qiime.plugin.Str,
-        'indel_prob': qiime.plugin.Float,
-        'indel_max': qiime.plugin.Int,
-        'trim_length': qiime.plugin.Int,
-        'min_reads': qiime.plugin.Int,
-        'min_size': qiime.plugin.Int,
-        'negate': qiime.plugin.Bool,
-        'jobs_to_start': qiime.plugin.Int,
-        'hashed_feature_ids': qiime.plugin.Bool
+        'pos_ref_fp': qiime2.plugin.Str,
+        'neg_ref_fp': qiime2.plugin.Str,
+        'mean_error': qiime2.plugin.Float,
+        'error_dist': qiime2.plugin.Str,
+        'indel_prob': qiime2.plugin.Float,
+        'indel_max': qiime2.plugin.Int,
+        'trim_length': qiime2.plugin.Int,
+        'min_reads': qiime2.plugin.Int,
+        'min_size': qiime2.plugin.Int,
+        'negate': qiime2.plugin.Bool,
+        'jobs_to_start': qiime2.plugin.Int,
+        'hashed_feature_ids': qiime2.plugin.Bool
     },
     outputs=[('table', FeatureTable[Frequency]),
              ('representative_sequences', FeatureData[Sequence])],
-    name='Deblur',
-    description='This method applies the Deblur workflow'
+    name='Perform sequence quality control using the deblur workflow',
+    description='Apply the deblur quality control workflow'
 )
