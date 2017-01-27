@@ -13,7 +13,7 @@ import biom
 import skbio
 import hashlib
 
-from q2_types import FeatureTable, Frequency
+from q2_types.feature_table import FeatureTable, Frequency
 from q2_types.per_sample_sequences import \
         SingleLanePerSampleSingleEndFastqDirFmt
 from q2_types.per_sample_sequences import SequencesWithQuality
@@ -130,6 +130,6 @@ plugin.methods.register_function(
     },
     outputs=[('table', FeatureTable[Frequency]),
              ('representative_sequences', FeatureData[Sequence])],
-    name='Deblur',
-    description='This method applies the Deblur workflow'
+    name='Perform sequence quality control using the deblur workflow',
+    description='Apply the deblur quality control workflow'
 )
