@@ -10,10 +10,10 @@ before_install:
 install:
   - conda create --yes -n test-env python=$PYTHON_VERSION nose flake8
   - source activate test-env
-  - conda install -c bioconda VSEARCH MAFFT SortMeRNA==2.0 biom-format
-  - conda install -c biocore deblur
+  - conda install --yes -c bioconda VSEARCH MAFFT SortMeRNA==2.0 biom-format
+  - conda install --yes -c biocore deblur
   - pip install https://github.com/qiime2/qiime2/archive/master.zip https://github.com/qiime2/q2-types/archive/master.zip 
-  - pip install .
+  - pip install . --no-deps
   - git clone https://github.com/qiime2/q2lint
 script:
   - nosetests
