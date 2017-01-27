@@ -8,7 +8,7 @@
 import subprocess
 import tempfile
 import os
-import qiime.plugin
+import qiime2.plugin
 import biom
 import skbio
 import hashlib
@@ -89,7 +89,7 @@ def denoise(demultiplexed_seqs: SingleLanePerSampleSingleEndFastqDirFmt,
     return (table, rep_sequences)
 
 
-plugin = qiime.plugin.Plugin(
+plugin = qiime2.plugin.Plugin(
     name='deblur',
     version=q2_deblur.__version__,
     website='https://github.com/biocore/deblur',
@@ -115,18 +115,18 @@ plugin.methods.register_function(
         'demultiplexed_seqs': SampleData[SequencesWithQuality]
     },
     parameters={
-        'pos_ref_fp': qiime.plugin.Str,
-        'neg_ref_fp': qiime.plugin.Str,
-        'mean_error': qiime.plugin.Float,
-        'error_dist': qiime.plugin.Str,
-        'indel_prob': qiime.plugin.Float,
-        'indel_max': qiime.plugin.Int,
-        'trim_length': qiime.plugin.Int,
-        'min_reads': qiime.plugin.Int,
-        'min_size': qiime.plugin.Int,
-        'negate': qiime.plugin.Bool,
-        'jobs_to_start': qiime.plugin.Int,
-        'hashed_feature_ids': qiime.plugin.Bool
+        'pos_ref_fp': qiime2.plugin.Str,
+        'neg_ref_fp': qiime2.plugin.Str,
+        'mean_error': qiime2.plugin.Float,
+        'error_dist': qiime2.plugin.Str,
+        'indel_prob': qiime2.plugin.Float,
+        'indel_max': qiime2.plugin.Int,
+        'trim_length': qiime2.plugin.Int,
+        'min_reads': qiime2.plugin.Int,
+        'min_size': qiime2.plugin.Int,
+        'negate': qiime2.plugin.Bool,
+        'jobs_to_start': qiime2.plugin.Int,
+        'hashed_feature_ids': qiime2.plugin.Bool
     },
     outputs=[('table', FeatureTable[Frequency]),
              ('representative_sequences', FeatureData[Sequence])],

@@ -13,13 +13,13 @@ setup(
     name="q2-deblur",
     version="2017.1.0.dev0",
     packages=find_packages(),
-    install_requires=['qiime >= 2.0.6', 'pandas', 'q2-types >= 2.0.6',
+    install_requires=['qiime2 == 2017.2.*', 'pandas', 'q2-types == 2017.2.*',
                       'deblur >= 0.1.8'],
     author="Daniel McDonald",
-    author_email="mcdonadt@colorado.edu",
+    author_email="wasade@gmail.com",
     description="Wrapper for Deblur",
     entry_points={
-        "qiime.plugins":
+        "qiime2.plugins":
         ["q2-deblur=q2_deblur.plugin_setup:plugin"]
     }
 )
