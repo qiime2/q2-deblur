@@ -1,3 +1,10 @@
+# ----------------------------------------------------------------------------
+# Copyright (c) 2016-2017, QIIME 2 development team.
+#
+# Distributed under the terms of the Modified BSD License.
+#
+# The full license is in the file LICENSE, distributed with this software.
+# ----------------------------------------------------------------------------
 import subprocess
 import tempfile
 import os
@@ -24,7 +31,7 @@ def denoise(demultiplexed_seqs: SingleLanePerSampleSingleEndFastqDirFmt,
             error_dist: str=None,
             indel_prob: float=0.01,
             indel_max: int=3,
-            trim_length: int=100,
+            trim_length: int=150,
             min_reads: int=0,
             min_size: int=2,
             negate: bool=False,

@@ -1,3 +1,10 @@
+# ----------------------------------------------------------------------------
+# Copyright (c) 2016-2017, QIIME 2 development team.
+#
+# Distributed under the terms of the Modified BSD License.
+#
+# The full license is in the file LICENSE, distributed with this software.
+# ----------------------------------------------------------------------------
 from setuptools import setup, find_packages
 
 setup(
@@ -7,7 +14,7 @@ setup(
     install_requires=['qiime2 == 2017.2.*', 'pandas', 'q2-types == 2017.2.*',
                       'deblur >= 0.1.8'],
     author="Daniel McDonald",
-    author_email="mcdonadt@colorado.edu",
+    author_email="wasade@gmail.com",
     description="Sequence quality control with deblur",
     entry_points={
         "qiime2.plugins":
