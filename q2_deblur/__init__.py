@@ -5,4 +5,6 @@
 #
 # The full license is in the file LICENSE, distributed with this software.
 # ----------------------------------------------------------------------------
-__version__ = "0.0.7.dev0"
+import pkg_resources
+
+__version__ = pkg_resources.get_distribution('q2-quality-filter').version

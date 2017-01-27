@@ -11,12 +11,11 @@ import os
 import qiime.plugin
 import biom
 import skbio
-import subprocess
 import hashlib
 
 from q2_types import FeatureTable, Frequency
 from q2_types.per_sample_sequences import \
-        SingleLanePerSampleSingleEndFastqDirFmt, FastqGzFormat
+        SingleLanePerSampleSingleEndFastqDirFmt
 from q2_types.per_sample_sequences import SequencesWithQuality
 from q2_types.feature_data import DNAIterator
 from q2_types.sample_data import SampleData
