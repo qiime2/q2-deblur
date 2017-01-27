@@ -21,14 +21,14 @@ from deblur.deblurring import get_default_error_profile
 def denoise(demultiplexed_seqs: SingleLanePerSampleSingleEndFastqDirFmt,
             pos_ref_fp: str=None,
             neg_ref_fp: str=None,
-            mean_error: float=0.005, 
-            error_dist: str=None, 
-            indel_prob: float=0.01, 
+            mean_error: float=0.005,
+            error_dist: str=None,
+            indel_prob: float=0.01,
             indel_max: int=3,
-            trim_length: int=100, 
-            min_reads: int=0, 
-            min_size: int=2, 
-            negate: bool=False, 
+            trim_length: int=150,
+            min_reads: int=0,
+            min_size: int=2,
+            negate: bool=False,
             jobs_to_start: int=1,
             hashed_feature_ids: bool=True) -> (biom.Table, DNAIterator):
 
@@ -37,7 +37,7 @@ def denoise(demultiplexed_seqs: SingleLanePerSampleSingleEndFastqDirFmt,
 
     with tempfile.TemporaryDirectory() as tmp:
         seqs_fp = str(demultiplexed_seqs)
-        cmd = ['deblur', 'workflow', 
+        cmd = ['deblur', 'workflow',
                '--seqs-fp', seqs_fp,
                '--output-dir', tmp,
                '--mean-error', str(mean_error),
@@ -47,25 +47,25 @@ def denoise(demultiplexed_seqs: SingleLanePerSampleSingleEndFastqDirFmt,
                '--trim-length', str(trim_length),
                '--min-reads', str(min_reads),
                '--min-size', str(min_size),
-               '-w']  
+               '-w']
         if pos_ref_fp is not None:
             cmd.append('--pos-ref-db')
             cmd.append(pos_ref_fp)
-        
+
         if neg_ref_fp is not None:
             cmd.append('--neg-ref-db')
             cmd.append(neg_ref_fp)
-        
+
         if negate:
             cmd.append('--negate')
-        
+
         subprocess.run(cmd, check=True)
-        
+
         # code adapted from q2-dada2
         table = biom.load_table(os.path.join(tmp, 'final.biom'))
         sid_map = {id_: id_.split('_')[0] for id_ in table.ids(axis='sample')}
         table.update_ids(sid_map, axis='sample', inplace=True)
-        
+
         if hashed_feature_ids:
             # Make feature IDs the md5 sums of the sequences.
             fid_map = {id_: hashlib.md5(id_.encode('utf-8')).hexdigest()
