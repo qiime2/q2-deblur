@@ -21,14 +21,12 @@ from q2_types.feature_data import DNAIterator
 from q2_types.sample_data import SampleData
 from q2_types.feature_data import FeatureData, Sequence
 import q2_deblur
-from deblur.deblurring import get_default_error_profile
 
 
 def denoise(demultiplexed_seqs: SingleLanePerSampleSingleEndFastqDirFmt,
-            pos_ref_fp: str=None,
-            neg_ref_fp: str=None,
+            pos_ref_filepath: str=None,
+            neg_ref_filepath: str=None,
             mean_error: float=0.005,
-            error_dist: str=None,
             indel_prob: float=0.01,
             indel_max: int=3,
             trim_length: int=150,
@@ -38,29 +36,25 @@ def denoise(demultiplexed_seqs: SingleLanePerSampleSingleEndFastqDirFmt,
             jobs_to_start: int=1,
             hashed_feature_ids: bool=True) -> (biom.Table, DNAIterator):
 
-    if error_dist is None:
-        error_dist = get_default_error_profile()
-
     with tempfile.TemporaryDirectory() as tmp:
         seqs_fp = str(demultiplexed_seqs)
         cmd = ['deblur', 'workflow',
                '--seqs-fp', seqs_fp,
                '--output-dir', tmp,
                '--mean-error', str(mean_error),
-               '--error-dist', ','.join([str(i) for i in error_dist]),
                '--indel-prob', str(indel_prob),
                '--indel-max', str(indel_max),
                '--trim-length', str(trim_length),
                '--min-reads', str(min_reads),
                '--min-size', str(min_size),
                '-w']
-        if pos_ref_fp is not None:
+        if pos_ref_filepath is not None:
             cmd.append('--pos-ref-db')
-            cmd.append(pos_ref_fp)
+            cmd.append(pos_ref_filepath)
 
-        if neg_ref_fp is not None:
+        if neg_ref_filepath is not None:
             cmd.append('--neg-ref-db')
-            cmd.append(neg_ref_fp)
+            cmd.append(neg_ref_filepath)
 
         if negate:
             cmd.append('--negate')
@@ -94,13 +88,7 @@ plugin = qiime2.plugin.Plugin(
     version=q2_deblur.__version__,
     website='https://github.com/biocore/deblur',
     package='q2_deblur',
-    # Information on how to obtain user support should be provided as a free
-    # text string via user_support_text. If None is provided, users will
-    # be referred to the plugin's website for support.
     user_support_text='https://github.com/biocore/deblur/issues',
-    # Information on how the plugin should be cited should be provided as a
-    # free text string via citation_text. If None is provided, users
-    # will be told to use the plugin's website as a citation.
     citation_text=("Deblur rapidly resolves single-nucleotide community "
                    "sequence patterns. Amnon Amir, Daniel McDonald, Jose "
                    "A. Navas-Molina, Evguenia Kopylova, Jamie Morton, "
@@ -115,10 +103,9 @@ plugin.methods.register_function(
         'demultiplexed_seqs': SampleData[SequencesWithQuality]
     },
     parameters={
-        'pos_ref_fp': qiime2.plugin.Str,
-        'neg_ref_fp': qiime2.plugin.Str,
+        'pos_ref_filepath': qiime2.plugin.Str,
+        'neg_ref_filepath': qiime2.plugin.Str,
         'mean_error': qiime2.plugin.Float,
-        'error_dist': qiime2.plugin.Str,
         'indel_prob': qiime2.plugin.Float,
         'indel_max': qiime2.plugin.Int,
         'trim_length': qiime2.plugin.Int,
@@ -128,8 +115,34 @@ plugin.methods.register_function(
         'jobs_to_start': qiime2.plugin.Int,
         'hashed_feature_ids': qiime2.plugin.Bool
     },
+    parameter_descriptions={
+        'pos_ref_filepath': ("Positive filtering database. Keep all sequences "
+                             "aligning to these sequences."),
+        'neg_ref_filepath': ("Negative (artifacts) filtering database. "
+                             "Discard sequences aligning to these sequences."),
+        'mean_error': ("The mean per nucleotide error, used for original "
+                       "sequence estimate. If not passed, a value of 0.5% is "
+                       "used."),
+        'indel_prob': ('Insertion/deletion (indel) probability (same for N '
+                       'indels).'),
+        'indel_max': "Maximum number of insertion/deletions.",
+        'trim_length': "Sequence trim length.",
+        'min_reads': ("Retain only features appearing at least min_reads "
+                      "times across all samples in the resulting feature "
+                      "table."),
+        'min_size': ("In each sample, discard all features with an abundance "
+                     "less than min_size."),
+        'negate': ("Discard (rather than retain) all sequences aligning to "
+                   "the sequences provided in neg_ref_fp."),
+        'jobs_to_start': "Number of jobs to start (if to run in parallel).",
+        'hashed_feature_ids': "If true, hash the feature IDs."
+    },
     outputs=[('table', FeatureTable[Frequency]),
              ('representative_sequences', FeatureData[Sequence])],
+    output_descriptions={
+        'table': 'The resulting denoised feature table.',
+        'representative_sequences': 'The resulting feature sequences.'
+    },
     name='Perform sequence quality control using the deblur workflow',
     description='Apply the deblur quality control workflow'
 )
