@@ -25,8 +25,8 @@ from deblur.deblurring import get_default_error_profile
 
 
 def denoise(demultiplexed_seqs: SingleLanePerSampleSingleEndFastqDirFmt,
-            pos_ref: str=None,
-            neg_ref: str=None,
+            pos_ref_filepath: str=None,
+            neg_ref_filepath: str=None,
             mean_error: float=0.005,
             error_dist: str=None,
             indel_prob: float=0.01,
@@ -54,13 +54,13 @@ def denoise(demultiplexed_seqs: SingleLanePerSampleSingleEndFastqDirFmt,
                '--min-reads', str(min_reads),
                '--min-size', str(min_size),
                '-w']
-        if pos_ref is not None:
+        if pos_ref_filepath is not None:
             cmd.append('--pos-ref-db')
-            cmd.append(pos_ref)
+            cmd.append(pos_ref_filepath)
 
-        if neg_ref is not None:
+        if neg_ref_filepath is not None:
             cmd.append('--neg-ref-db')
-            cmd.append(neg_ref)
+            cmd.append(neg_ref_filepath)
 
         if negate:
             cmd.append('--negate')
@@ -109,8 +109,8 @@ plugin.methods.register_function(
         'demultiplexed_seqs': SampleData[SequencesWithQuality]
     },
     parameters={
-        'pos_ref': qiime2.plugin.Str,
-        'neg_ref': qiime2.plugin.Str,
+        'pos_ref_filepath': qiime2.plugin.Str,
+        'neg_ref_filepath': qiime2.plugin.Str,
         'mean_error': qiime2.plugin.Float,
         'error_dist': qiime2.plugin.Str,
         'indel_prob': qiime2.plugin.Float,
@@ -123,10 +123,10 @@ plugin.methods.register_function(
         'hashed_feature_ids': qiime2.plugin.Bool
     },
     parameter_descriptions={
-        'pos_ref': ("Positive filtering database. Keep all sequences "
-                    "aligning to these sequences."),
-        'neg_ref': ("Negative (artifacts) filtering database. Discard "
-                    "sequences aligning to these sequences."),
+        'pos_ref_filepath': ("Positive filtering database. Keep all sequences "
+                             "aligning to these sequences."),
+        'neg_ref_filepath': ("Negative (artifacts) filtering database. "
+                             "Discard sequences aligning to these sequences."),
         'mean_error': ("The mean per nucleotide error, used for original "
                        "sequence estimate. If not passed, a value of 0.5% is "
                        "used."),
