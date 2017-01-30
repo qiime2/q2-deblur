@@ -94,13 +94,7 @@ plugin = qiime2.plugin.Plugin(
     version=q2_deblur.__version__,
     website='https://github.com/biocore/deblur',
     package='q2_deblur',
-    # Information on how to obtain user support should be provided as a free
-    # text string via user_support_text. If None is provided, users will
-    # be referred to the plugin's website for support.
     user_support_text='https://github.com/biocore/deblur/issues',
-    # Information on how the plugin should be cited should be provided as a
-    # free text string via citation_text. If None is provided, users
-    # will be told to use the plugin's website as a citation.
     citation_text=("Deblur rapidly resolves single-nucleotide community "
                    "sequence patterns. Amnon Amir, Daniel McDonald, Jose "
                    "A. Navas-Molina, Evguenia Kopylova, Jamie Morton, "
@@ -128,8 +122,37 @@ plugin.methods.register_function(
         'jobs_to_start': qiime2.plugin.Int,
         'hashed_feature_ids': qiime2.plugin.Bool
     },
+    parameter_descriptions={
+        'pos_ref_fp': ("Positive (16S) filtering database. Keep all sequences "
+                       "aligning to this FASTA file"),
+        'neg_ref_fp': ("Negative (artifacts) filtering database. Keep all "
+                       "sequences aligning to this FASTA file"),
+        'mean_error': ("The mean per nucleotide error, used for original "
+                       "sequence estimate. If not passed typical illumina "
+                       "error rate is used"),
+        'error_dist': ("A comma separated list of error probabilities for "
+                       "each hamming distance. The length of the list "
+                       "determines the number of hamming distances taken into "
+                       "account.",
+        'indel_prob': ('Insertion/deletion (indel) probability (same for N '
+                       'indels)'),
+        'indel_max': "Maximal indel number",
+        'trim_length': "Sequence trim length",
+        'min_reads': ("In final biom table - keep only sequences appearing at "
+                      "least min-reads in all samples combined.",
+        'min_size': "Per sample - discard sequences with an abundance value "
+                    "smaller than min-size"),
+        'negate': ("Discard all sequences aligning to the database passed via "
+                   "--ref-fp option"),
+        'jobs_to_start': "Number of jobs to start (if to run in parallel)",
+        'hashed_feature_ids': "If true, hash the feature IDs."
+    },
     outputs=[('table', FeatureTable[Frequency]),
              ('representative_sequences', FeatureData[Sequence])],
+    output_descriptions={
+        'table': 'A FeatureTable of the denoised sample data.',
+        'representative_sequences': 'The denoised features as sequences.'
+    },
     name='Perform sequence quality control using the deblur workflow',
     description='Apply the deblur quality control workflow'
 )
