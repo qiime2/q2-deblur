@@ -21,7 +21,6 @@ from q2_types.feature_data import DNAIterator
 from q2_types.sample_data import SampleData
 from q2_types.feature_data import FeatureData, Sequence
 import q2_deblur
-from deblur.deblurring import get_default_error_profile
 
 
 def denoise(demultiplexed_seqs: SingleLanePerSampleSingleEndFastqDirFmt,
