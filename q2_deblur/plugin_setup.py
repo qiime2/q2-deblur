@@ -25,8 +25,8 @@ from deblur.deblurring import get_default_error_profile
 
 
 def denoise(demultiplexed_seqs: SingleLanePerSampleSingleEndFastqDirFmt,
-            pos_ref_fp: str=None,
-            neg_ref_fp: str=None,
+            pos_ref: str=None,
+            neg_ref: str=None,
             mean_error: float=0.005,
             error_dist: str=None,
             indel_prob: float=0.01,
@@ -54,13 +54,13 @@ def denoise(demultiplexed_seqs: SingleLanePerSampleSingleEndFastqDirFmt,
                '--min-reads', str(min_reads),
                '--min-size', str(min_size),
                '-w']
-        if pos_ref_fp is not None:
+        if pos_ref is not None:
             cmd.append('--pos-ref-db')
-            cmd.append(pos_ref_fp)
+            cmd.append(pos_ref)
 
-        if neg_ref_fp is not None:
+        if neg_ref is not None:
             cmd.append('--neg-ref-db')
-            cmd.append(neg_ref_fp)
+            cmd.append(neg_ref)
 
         if negate:
             cmd.append('--negate')
@@ -109,8 +109,8 @@ plugin.methods.register_function(
         'demultiplexed_seqs': SampleData[SequencesWithQuality]
     },
     parameters={
-        'pos_ref_fp': qiime2.plugin.Str,
-        'neg_ref_fp': qiime2.plugin.Str,
+        'pos_ref': qiime2.plugin.Str,
+        'neg_ref': qiime2.plugin.Str,
         'mean_error': qiime2.plugin.Float,
         'error_dist': qiime2.plugin.Str,
         'indel_prob': qiime2.plugin.Float,
@@ -123,35 +123,36 @@ plugin.methods.register_function(
         'hashed_feature_ids': qiime2.plugin.Bool
     },
     parameter_descriptions={
-        'pos_ref_fp': ("Positive (16S) filtering database. Keep all sequences "
-                       "aligning to this FASTA file."),
-        'neg_ref_fp': ("Negative (artifacts) filtering database. Keep all "
-                       "sequences aligning to this FASTA file."),
+        'pos_ref': ("Positive filtering database. Keep all sequences "
+                    "aligning to these sequences."),
+        'neg_ref': ("Negative (artifacts) filtering database. Discard "
+                    "sequences aligning to these sequences."),
         'mean_error': ("The mean per nucleotide error, used for original "
-                       "sequence estimate. If not passed typical Illumina "
-                       "error rate is used."),
+                       "sequence estimate. If not passed, a value of 0.5% is "
+                       "used."),
         'error_dist': ("A comma separated list of error probabilities for "
                        "each Hamming distance. The length of the list "
                        "determines the number of Hamming distances taken into "
                        "account."),
         'indel_prob': ('Insertion/deletion (indel) probability (same for N '
                        'indels).'),
-        'indel_max': "Maximal indel number.",
+        'indel_max': "Maximum number of insertion/deletions.",
         'trim_length': "Sequence trim length.",
-        'min_reads': ("In final biom table - keep only sequences appearing at "
-                      "least min-reads in all samples combined."),
-        'min_size': ("Per sample - discard sequences with an abundance value "
-                     "smaller than min-size."),
-        'negate': ("Discard all sequences aligning to the database passed via "
-                   "--ref-fp option."),
+        'min_reads': ("Retain only features appearing at least min_reads "
+                      "times across all samples in the resulting feature "
+                      "table."),
+        'min_size': ("In each sample, discard all features with an abundance "
+                     "less than min_size."),
+        'negate': ("Discard (rather than retain) all sequences aligning to "
+                   "the sequences provided in neg_ref_fp."),
         'jobs_to_start': "Number of jobs to start (if to run in parallel).",
         'hashed_feature_ids': "If true, hash the feature IDs."
     },
     outputs=[('table', FeatureTable[Frequency]),
              ('representative_sequences', FeatureData[Sequence])],
     output_descriptions={
-        'table': 'A FeatureTable of the denoised sample data.',
-        'representative_sequences': 'The denoised features as sequences.'
+        'table': 'The resulting denoised feature table.',
+        'representative_sequences': 'The resulting feature sequences.'
     },
     name='Perform sequence quality control using the deblur workflow',
     description='Apply the deblur quality control workflow'
