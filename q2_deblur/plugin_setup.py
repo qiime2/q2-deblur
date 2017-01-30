@@ -132,8 +132,12 @@ plugin.methods.register_function(
                       "table."),
         'min_size': ("In each sample, discard all features with an abundance "
                      "less than min_size."),
-        'negate': ("Discard (rather than retain) all sequences aligning to "
-                   "the sequences provided in neg_ref_fp."),
+        'negate': ("Discard all sequences aligning to "
+                   "the sequences provided in neg_ref_fp. "
+                   "Used for removal of phiX and adapter sequences."
+                   " Note an additional positive filtering file "
+                   "(only sequences close enough to pos_ref_filepath) will "
+                   "also be generated from these reads."),
         'jobs_to_start': "Number of jobs to start (if to run in parallel).",
         'hashed_feature_ids': "If true, hash the feature IDs."
     },
