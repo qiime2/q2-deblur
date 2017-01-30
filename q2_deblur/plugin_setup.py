@@ -133,15 +133,15 @@ plugin.methods.register_function(
         'error_dist': ("A comma separated list of error probabilities for "
                        "each hamming distance. The length of the list "
                        "determines the number of hamming distances taken into "
-                       "account.",
+                       "account."),
         'indel_prob': ('Insertion/deletion (indel) probability (same for N '
                        'indels)'),
         'indel_max': "Maximal indel number",
         'trim_length': "Sequence trim length",
         'min_reads': ("In final biom table - keep only sequences appearing at "
-                      "least min-reads in all samples combined.",
-        'min_size': "Per sample - discard sequences with an abundance value "
-                    "smaller than min-size"),
+                      "least min-reads in all samples combined."),
+        'min_size': ("Per sample - discard sequences with an abundance value "
+                     "smaller than min-size"),
         'negate': ("Discard all sequences aligning to the database passed via "
                    "--ref-fp option"),
         'jobs_to_start': "Number of jobs to start (if to run in parallel)",
