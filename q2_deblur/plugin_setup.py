@@ -28,7 +28,6 @@ def denoise(demultiplexed_seqs: SingleLanePerSampleSingleEndFastqDirFmt,
             pos_ref_filepath: str=None,
             neg_ref_filepath: str=None,
             mean_error: float=0.005,
-            error_dist: str=None,
             indel_prob: float=0.01,
             indel_max: int=3,
             trim_length: int=150,
@@ -38,16 +37,12 @@ def denoise(demultiplexed_seqs: SingleLanePerSampleSingleEndFastqDirFmt,
             jobs_to_start: int=1,
             hashed_feature_ids: bool=True) -> (biom.Table, DNAIterator):
 
-    if error_dist is None:
-        error_dist = get_default_error_profile()
-
     with tempfile.TemporaryDirectory() as tmp:
         seqs_fp = str(demultiplexed_seqs)
         cmd = ['deblur', 'workflow',
                '--seqs-fp', seqs_fp,
                '--output-dir', tmp,
                '--mean-error', str(mean_error),
-               '--error-dist', ','.join([str(i) for i in error_dist]),
                '--indel-prob', str(indel_prob),
                '--indel-max', str(indel_max),
                '--trim-length', str(trim_length),
@@ -112,7 +107,6 @@ plugin.methods.register_function(
         'pos_ref_filepath': qiime2.plugin.Str,
         'neg_ref_filepath': qiime2.plugin.Str,
         'mean_error': qiime2.plugin.Float,
-        'error_dist': qiime2.plugin.Str,
         'indel_prob': qiime2.plugin.Float,
         'indel_max': qiime2.plugin.Int,
         'trim_length': qiime2.plugin.Int,
@@ -130,10 +124,6 @@ plugin.methods.register_function(
         'mean_error': ("The mean per nucleotide error, used for original "
                        "sequence estimate. If not passed, a value of 0.5% is "
                        "used."),
-        'error_dist': ("A comma separated list of error probabilities for "
-                       "each Hamming distance. The length of the list "
-                       "determines the number of Hamming distances taken into "
-                       "account."),
         'indel_prob': ('Insertion/deletion (indel) probability (same for N '
                        'indels).'),
         'indel_max': "Maximum number of insertion/deletions.",
