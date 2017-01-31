@@ -150,11 +150,11 @@ def _denoise_helper(
                '--min-size', str(min_size),
                '-w']
         if positive_filter_seqs is not None:
-            cmd.append('--pos-ref-db')
+            cmd.append('--pos-ref-fp')
             cmd.append(str(positive_filter_seqs))
 
         if negative_filter_seqs is not None:
-            cmd.append('--neg-ref-db')
+            cmd.append('--neg-ref-fp')
             cmd.append(str(negative_filter_seqs))
 
         subprocess.run(cmd, check=True)
