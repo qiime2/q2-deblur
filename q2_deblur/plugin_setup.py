@@ -17,24 +17,50 @@ from q2_types.feature_table import FeatureTable, Frequency
 from q2_types.per_sample_sequences import \
         SingleLanePerSampleSingleEndFastqDirFmt
 from q2_types.per_sample_sequences import SequencesWithQuality
-from q2_types.feature_data import DNAIterator
+from q2_types.feature_data import (DNAIterator, DNAFASTAFormat, FeatureData,
+                                   Sequence)
 from q2_types.sample_data import SampleData
-from q2_types.feature_data import FeatureData, Sequence
+
 import q2_deblur
 
 
-def denoise(demultiplexed_seqs: SingleLanePerSampleSingleEndFastqDirFmt,
-            pos_ref_filepath: str=None,
-            neg_ref_filepath: str=None,
-            mean_error: float=0.005,
-            indel_prob: float=0.01,
-            indel_max: int=3,
-            trim_length: int=150,
-            min_reads: int=0,
-            min_size: int=2,
-            negate: bool=False,
-            jobs_to_start: int=1,
-            hashed_feature_ids: bool=True) -> (biom.Table, DNAIterator):
+def denoise_positive_negative_filter(
+    demultiplexed_seqs: SingleLanePerSampleSingleEndFastqDirFmt,
+    positive_filter_seqs: DNAFASTAFormat,
+    negative_filter_seqs: DNAFASTAFormat,
+    mean_error: float=0.005,
+    indel_prob: float=0.01,
+    indel_max: int=3,
+    trim_length: int=150,
+    min_reads: int=0,
+    min_size: int=2,
+    jobs_to_start: int=1,
+    hashed_feature_ids: bool=True) -> (biom.Table, DNAIterator):
+    return _denoise_helper(
+        demultiplexed_seqs=demultiplexed_seqs,
+        positive_filter_seqs=positive_filter_seqs,
+        negative_filter_seqs=positive_filter_seqs,
+        mean_error=mean_error,
+        indel_prob=indel_prob,
+        indel_max=indel_max,
+        trim_length=trim_length,
+        min_reads=min_reads,
+        min_size=min_size,
+        jobs_to_start=jobs_to_start,
+        hashed_feature_ids=hashed_feature_ids)
+
+def _denoise_helper(
+    demultiplexed_seqs: SingleLanePerSampleSingleEndFastqDirFmt,
+    positive_filter_seqs: str=None,
+    negative_filter_seqs: str=None,
+    mean_error: float=0.005,
+    indel_prob: float=0.01,
+    indel_max: int=3,
+    trim_length: int=150,
+    min_reads: int=0,
+    min_size: int=2,
+    jobs_to_start: int=1,
+    hashed_feature_ids: bool=True) -> (biom.Table, DNAIterator):
 
     with tempfile.TemporaryDirectory() as tmp:
         seqs_fp = str(demultiplexed_seqs)
@@ -50,14 +76,11 @@ def denoise(demultiplexed_seqs: SingleLanePerSampleSingleEndFastqDirFmt,
                '-w']
         if pos_ref_filepath is not None:
             cmd.append('--pos-ref-db')
-            cmd.append(pos_ref_filepath)
+            cmd.append(str(positive_filter_seqs))
 
         if neg_ref_filepath is not None:
             cmd.append('--neg-ref-db')
-            cmd.append(neg_ref_filepath)
-
-        if negate:
-            cmd.append('--negate')
+            cmd.append(str(negative_filter_seqs))
 
         subprocess.run(cmd, check=True)
 
@@ -98,13 +121,13 @@ plugin = qiime2.plugin.Plugin(
 )
 
 plugin.methods.register_function(
-    function=denoise,
+    function=denoise_positive_negative_filter,
     inputs={
-        'demultiplexed_seqs': SampleData[SequencesWithQuality]
+        'demultiplexed_seqs': SampleData[SequencesWithQuality],
+        'positive_filter_seqs': FeatureData[Sequence],
+        'negative_filter_seqs': FeatureData[Sequence],
     },
     parameters={
-        'pos_ref_filepath': qiime2.plugin.Str,
-        'neg_ref_filepath': qiime2.plugin.Str,
         'mean_error': qiime2.plugin.Float,
         'indel_prob': qiime2.plugin.Float,
         'indel_max': qiime2.plugin.Int,
@@ -115,11 +138,16 @@ plugin.methods.register_function(
         'jobs_to_start': qiime2.plugin.Int,
         'hashed_feature_ids': qiime2.plugin.Bool
     },
+    outputs=[('table', FeatureTable[Frequency]),
+             ('representative_sequences', FeatureData[Sequence])],
+    input_descriptions={
+        'demultiplexed_seqs': 'The demultiplexed sequences to be denoised.',
+        'positive_filter_seqs': ("Positive filtering database. Keep all "
+                                 "sequences aligning to these sequences."),
+        'negative_filter_seqs': ("Negative filtering database. Discard all "
+                                 "sequences aligning to these sequences."),
+    },
     parameter_descriptions={
-        'pos_ref_filepath': ("Positive filtering database. Keep all sequences "
-                             "aligning to these sequences."),
-        'neg_ref_filepath': ("Negative (artifacts) filtering database. "
-                             "Discard sequences aligning to these sequences."),
         'mean_error': ("The mean per nucleotide error, used for original "
                        "sequence estimate. If not passed, a value of 0.5% is "
                        "used."),
@@ -132,13 +160,9 @@ plugin.methods.register_function(
                       "table."),
         'min_size': ("In each sample, discard all features with an abundance "
                      "less than min_size."),
-        'negate': ("Discard (rather than retain) all sequences aligning to "
-                   "the sequences provided in neg_ref_fp."),
         'jobs_to_start': "Number of jobs to start (if to run in parallel).",
         'hashed_feature_ids': "If true, hash the feature IDs."
     },
-    outputs=[('table', FeatureTable[Frequency]),
-             ('representative_sequences', FeatureData[Sequence])],
     output_descriptions={
         'table': 'The resulting denoised feature table.',
         'representative_sequences': 'The resulting feature sequences.'
