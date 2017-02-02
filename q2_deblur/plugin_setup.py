@@ -48,9 +48,8 @@ def denoise(
         hashed_feature_ids=hashed_feature_ids)
 
 
-def denoise_positive_filter(
+def denoise_16S(
         demultiplexed_seqs: SingleLanePerSampleSingleEndFastqDirFmt,
-        positive_filter_seqs: DNAFASTAFormat,
         mean_error: float=0.005,
         indel_prob: float=0.01,
         indel_max: int=3,
@@ -61,8 +60,6 @@ def denoise_positive_filter(
         hashed_feature_ids: bool=True) -> (biom.Table, DNAIterator):
     return _denoise_helper(
         demultiplexed_seqs=demultiplexed_seqs,
-        positive_filter_seqs=positive_filter_seqs,
-        negative_filter_seqs=None,
         mean_error=mean_error,
         indel_prob=indel_prob,
         indel_max=indel_max,
@@ -73,9 +70,9 @@ def denoise_positive_filter(
         hashed_feature_ids=hashed_feature_ids)
 
 
-def denoise_negative_filter(
+def denoise_other(
         demultiplexed_seqs: SingleLanePerSampleSingleEndFastqDirFmt,
-        negative_filter_seqs: DNAFASTAFormat,
+        reference_seqs: DNAFASTAFormat,
         mean_error: float=0.005,
         indel_prob: float=0.01,
         indel_max: int=3,
@@ -86,34 +83,7 @@ def denoise_negative_filter(
         hashed_feature_ids: bool=True) -> (biom.Table, DNAIterator):
     return _denoise_helper(
         demultiplexed_seqs=demultiplexed_seqs,
-        positive_filter_seqs=None,
-        negative_filter_seqs=negative_filter_seqs,
-        mean_error=mean_error,
-        indel_prob=indel_prob,
-        indel_max=indel_max,
-        trim_length=trim_length,
-        min_reads=min_reads,
-        min_size=min_size,
-        jobs_to_start=jobs_to_start,
-        hashed_feature_ids=hashed_feature_ids)
-
-
-def denoise_positive_negative_filter(
-        demultiplexed_seqs: SingleLanePerSampleSingleEndFastqDirFmt,
-        positive_filter_seqs: DNAFASTAFormat,
-        negative_filter_seqs: DNAFASTAFormat,
-        mean_error: float=0.005,
-        indel_prob: float=0.01,
-        indel_max: int=3,
-        trim_length: int=150,
-        min_reads: int=0,
-        min_size: int=2,
-        jobs_to_start: int=1,
-        hashed_feature_ids: bool=True) -> (biom.Table, DNAIterator):
-    return _denoise_helper(
-        demultiplexed_seqs=demultiplexed_seqs,
-        positive_filter_seqs=positive_filter_seqs,
-        negative_filter_seqs=negative_filter_seqs,
+        reference_seqs=reference_seqs,
         mean_error=mean_error,
         indel_prob=indel_prob,
         indel_max=indel_max,
@@ -126,8 +96,7 @@ def denoise_positive_negative_filter(
 
 def _denoise_helper(
         demultiplexed_seqs: SingleLanePerSampleSingleEndFastqDirFmt,
-        positive_filter_seqs: str=None,
-        negative_filter_seqs: str=None,
+        reference_seqs: str=None,
         mean_error: float=0.005,
         indel_prob: float=0.01,
         indel_max: int=3,
@@ -149,13 +118,9 @@ def _denoise_helper(
                '--min-reads', str(min_reads),
                '--min-size', str(min_size),
                '-w']
-        if positive_filter_seqs is not None:
+        if reference_seqs is not None:
             cmd.append('--pos-ref-fp')
-            cmd.append(str(positive_filter_seqs))
-
-        if negative_filter_seqs is not None:
-            cmd.append('--neg-ref-fp')
-            cmd.append(str(negative_filter_seqs))
+            cmd.append(str(reference_seqs))
 
         subprocess.run(cmd, check=True)
 
@@ -236,7 +201,7 @@ _outputs = [('table', FeatureTable[Frequency]),
 
 
 plugin.methods.register_function(
-    function=denoise,
+    function=denoise_16S,
     inputs={
         'demultiplexed_seqs': SampleData[SequencesWithQuality],
     },
@@ -253,66 +218,21 @@ plugin.methods.register_function(
 
 
 plugin.methods.register_function(
-    function=denoise_positive_filter,
+    function=denoise_other,
     inputs={
         'demultiplexed_seqs': SampleData[SequencesWithQuality],
-        'positive_filter_seqs': FeatureData[Sequence],
+        'reference_seqs': FeatureData[Sequence],
     },
     parameters=_parameters,
     outputs=_outputs,
     input_descriptions={
         'demultiplexed_seqs': 'The demultiplexed sequences to be denoised.',
-        'positive_filter_seqs': ("Positive filtering database. Keep all "
-                                 "sequences aligning to these sequences."),
+        'reference_seqs': ("Positive filtering database. Keep all "
+                           "sequences aligning to these sequences."),
     },
     parameter_descriptions=_parameter_descriptions,
     output_descriptions=_output_descriptions,
     name='Deblur sequences and apply positive filter.',
     description=('Perform sequence quality control using the deblur workflow, '
                  'including positive alignment-based filtering.')
-)
-
-
-plugin.methods.register_function(
-    function=denoise_negative_filter,
-    inputs={
-        'demultiplexed_seqs': SampleData[SequencesWithQuality],
-        'negative_filter_seqs': FeatureData[Sequence],
-    },
-    parameters=_parameters,
-    outputs=_outputs,
-    input_descriptions={
-        'demultiplexed_seqs': 'The demultiplexed sequences to be denoised.',
-        'negative_filter_seqs': ("Negative filtering database. Discard all "
-                                 "sequences aligning to these sequences."),
-    },
-    parameter_descriptions=_parameter_descriptions,
-    output_descriptions=_output_descriptions,
-    name='Deblur sequences and apply negative filter.',
-    description=('Perform sequence quality control using the deblur workflow, '
-                 'including negative alignment-based filtering.')
-)
-
-
-plugin.methods.register_function(
-    function=denoise_positive_negative_filter,
-    inputs={
-        'demultiplexed_seqs': SampleData[SequencesWithQuality],
-        'positive_filter_seqs': FeatureData[Sequence],
-        'negative_filter_seqs': FeatureData[Sequence],
-    },
-    parameters=_parameters,
-    outputs=_outputs,
-    input_descriptions={
-        'demultiplexed_seqs': 'The demultiplexed sequences to be denoised.',
-        'positive_filter_seqs': ("Positive filtering database. Keep all "
-                                 "sequences aligning to these sequences."),
-        'negative_filter_seqs': ("Negative filtering database. Discard all "
-                                 "sequences aligning to these sequences."),
-    },
-    parameter_descriptions=_parameter_descriptions,
-    output_descriptions=_output_descriptions,
-    name='Deblur sequences and apply positive and negative filters.',
-    description=('Perform sequence quality control using the deblur workflow, '
-                 'including positive and negative alignment-based filtering.')
 )
