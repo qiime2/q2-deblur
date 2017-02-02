@@ -213,7 +213,11 @@ plugin.methods.register_function(
     parameter_descriptions=_parameter_descriptions,
     output_descriptions=_output_descriptions,
     name='Deblur sequences.',
-    description=('Perform sequence quality control using the deblur workflow.')
+    description=('Perform sequence quality control using the deblur workflow '
+                 'using a 16S reference. The specific reference used is the '
+                 '88% OTUs from Greengenes 13_8. The reference is used to '
+                 'assess whether each sequence is likely to be 16S by a local '
+                 'alignment using SortMeRNA with a permissive e-value.')
 )
 
 
@@ -232,7 +236,13 @@ plugin.methods.register_function(
     },
     parameter_descriptions=_parameter_descriptions,
     output_descriptions=_output_descriptions,
-    name='Deblur sequences and apply positive filter.',
+    name='Deblur sequences and retain those similar to the reference.',
     description=('Perform sequence quality control using the deblur workflow, '
-                 'including positive alignment-based filtering.')
+                 'including positive alignment-based filtering. This mode of '
+                 'execution is particularly useful when operating on non-16S '
+                 'data. For example, to apply Deblur to 18S data, you would '
+                 'want to specify a reference composed of 18S sequences in '
+                 'order to filter out sequences which do not appear to be '
+                 '18S. The assessment is performed by local alignment using '
+                 'SortMeRNA with a permissive e-value threshold.')
 )
