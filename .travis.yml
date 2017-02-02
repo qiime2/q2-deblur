@@ -19,7 +19,5 @@ script:
   - nosetests
   - flake8 q2_deblur setup.py
   - python q2lint/q2lint.py
-  - qiime deblur denoise --i-demultiplexed-seqs q2_deblur/assets/demux.qza --o-table denoised.qza --o-representative-sequences reps.qza
-  - qiime deblur denoise-positive-filter --i-demultiplexed-seqs q2_deblur/assets/demux.qza --o-table denoised.qza --o-representative-sequences reps.qza --i-positive-filter-seqs q2_deblur/assets/pos-reference.qza
-  - qiime deblur denoise-negative-filter --i-demultiplexed-seqs q2_deblur/assets/demux.qza --o-table denoised.qza --o-representative-sequences reps.qza --i-negative-filter-seqs q2_deblur/assets/neg-reference.qza
-  - qiime deblur denoise-positive-negative-filter --i-demultiplexed-seqs q2_deblur/assets/demux.qza --o-table denoised.qza --o-representative-sequences reps.qza --i-positive-filter-seqs q2_deblur/assets/pos-reference.qza --i-negative-filter-seqs q2_deblur/assets/neg-reference.qza
+  - qiime deblur denoise-16S --i-demultiplexed-seqs q2_deblur/assets/demux.qza --o-table denoised.qza --o-representative-sequences reps.qza
+  - qiime deblur denoise-other --i-demultiplexed-seqs q2_deblur/assets/demux.qza --o-table denoised.qza --o-representative-sequences reps.qza --i-reference-seqs q2_deblur/assets/test-reference.qza
