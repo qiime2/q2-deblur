@@ -24,37 +24,30 @@ from q2_types.sample_data import SampleData
 import q2_deblur
 
 
-def denoise(
-        demultiplexed_seqs: SingleLanePerSampleSingleEndFastqDirFmt,
-        mean_error: float=0.005,
-        indel_prob: float=0.01,
-        indel_max: int=3,
-        trim_length: int=150,
-        min_reads: int=0,
-        min_size: int=2,
-        jobs_to_start: int=1,
-        hashed_feature_ids: bool=True) -> (biom.Table, DNAIterator):
-    return _denoise_helper(
-        demultiplexed_seqs=demultiplexed_seqs,
-        positive_filter_seqs=None,
-        negative_filter_seqs=None,
-        mean_error=mean_error,
-        indel_prob=indel_prob,
-        indel_max=indel_max,
-        trim_length=trim_length,
-        min_reads=min_reads,
-        min_size=min_size,
-        jobs_to_start=jobs_to_start,
-        hashed_feature_ids=hashed_feature_ids)
+def _load_table(base_path):
+    """Load the table, remove extraneous filename bits from sample IDs"""
+    table = biom.load_table(os.path.join(base_path, 'reference-hit.biom'))
+    sid_map = {id_: id_.split('_')[0] for id_ in table.ids(axis='sample')}
+    table.update_ids(sid_map, axis='sample', inplace=True)
+    return table
+
+
+def _hash_ids(table):
+    """Compute the MD5 of every sequence, update table, return mapping"""
+    # Make feature IDs the md5 sums of the sequences.
+    fid_map = {id_: hashlib.md5(id_.encode('utf-8')).hexdigest()
+               for id_ in table.ids(axis='observation')}
+    table.update_ids(fid_map, axis='observation', inplace=True)
+    return fid_map
 
 
 def denoise_16S(
         demultiplexed_seqs: SingleLanePerSampleSingleEndFastqDirFmt,
+        trim_length: int,
         mean_error: float=0.005,
         indel_prob: float=0.01,
         indel_max: int=3,
-        trim_length: int=150,
-        min_reads: int=0,
+        min_reads: int=10,
         min_size: int=2,
         jobs_to_start: int=1,
         hashed_feature_ids: bool=True) -> (biom.Table, DNAIterator):
@@ -73,11 +66,11 @@ def denoise_16S(
 def denoise_other(
         demultiplexed_seqs: SingleLanePerSampleSingleEndFastqDirFmt,
         reference_seqs: DNAFASTAFormat,
+        trim_length: int,
         mean_error: float=0.005,
         indel_prob: float=0.01,
         indel_max: int=3,
-        trim_length: int=150,
-        min_reads: int=0,
+        min_reads: int=10,
         min_size: int=2,
         jobs_to_start: int=1,
         hashed_feature_ids: bool=True) -> (biom.Table, DNAIterator):
@@ -96,12 +89,12 @@ def denoise_other(
 
 def _denoise_helper(
         demultiplexed_seqs: SingleLanePerSampleSingleEndFastqDirFmt,
+        trim_length: int,
         reference_seqs: str=None,
         mean_error: float=0.005,
         indel_prob: float=0.01,
         indel_max: int=3,
-        trim_length: int=150,
-        min_reads: int=0,
+        min_reads: int=10,
         min_size: int=2,
         jobs_to_start: int=1,
         hashed_feature_ids: bool=True) -> (biom.Table, DNAIterator):
@@ -124,24 +117,16 @@ def _denoise_helper(
 
         subprocess.run(cmd, check=True)
 
-        # code adapted from q2-dada2
-        table = biom.load_table(os.path.join(tmp, 'final.biom'))
-        sid_map = {id_: id_.split('_')[0] for id_ in table.ids(axis='sample')}
-        table.update_ids(sid_map, axis='sample', inplace=True)
+        table = _load_table(tmp)
 
         if hashed_feature_ids:
-            # Make feature IDs the md5 sums of the sequences.
-            fid_map = {id_: hashlib.md5(id_.encode('utf-8')).hexdigest()
-                       for id_ in table.ids(axis='observation')}
-            table.update_ids(fid_map, axis='observation', inplace=True)
-
-            rep_sequences = DNAIterator((skbio.DNA(k, metadata={'id': v},
-                                                   lowercase='ignore')
-                                         for k, v in fid_map.items()))
+            obs_map = _hash_ids(table)  # inplace operation
         else:
-            rep_sequences = DNAIterator(
-                (skbio.DNA(id_, metadata={'id': id_}, lowercase='ignore')
-                 for id_ in table.ids(axis='observation')))
+            obs_map = {i: i for i in table.ids(axis='observation')}
+
+        rep_sequences = DNAIterator(
+            (skbio.DNA(k, metadata={'id': v}, lowercase='ignore')
+             for k, v in obs_map.items()))
 
     return (table, rep_sequences)
 
@@ -167,7 +152,7 @@ _parameter_descriptions = {
     'indel_prob': ('Insertion/deletion (indel) probability (same for N '
                    'indels).'),
     'indel_max': "Maximum number of insertion/deletions.",
-    'trim_length': "Sequence trim length.",
+    'trim_length': "Sequence trim length, specify -1 to disable trimming.",
     'min_reads': ("Retain only features appearing at least min_reads "
                   "times across all samples in the resulting feature "
                   "table."),
