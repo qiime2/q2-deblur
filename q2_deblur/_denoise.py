@@ -135,6 +135,9 @@ def _denoise_helper(
 
         subprocess.run(cmd, check=True)
 
+        # this is one of the outputs from Deblur, however it isn't clear what
+        # the utility of it is for the majority of qiime2 users. on the other
+        # hand, it is very easy to test to see if the run completed.
         all_seqs = os.path.join(tmp, 'all.seqs.fa')
         if os.stat(all_seqs).st_size == 0:
             raise ValueError("No sequences passed the filter. It is possible "
