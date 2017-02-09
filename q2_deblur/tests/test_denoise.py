@@ -26,6 +26,7 @@ from q2_deblur._denoise import _load_table, _hash_ids
 def _sort_seqs(seqs):
     return sorted(list(seqs), key=lambda x: x.metadata['id'])
 
+
 # structure shamelessly adapted from q2-dada2
 class TestDenoiseUtil(TestPluginBase):
     package = 'q2_deblur.tests'
