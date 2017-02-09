@@ -5,9 +5,3 @@
 #
 # The full license is in the file LICENSE, distributed with this software.
 # ----------------------------------------------------------------------------
-import pkg_resources
-
-from ._denoise import denoise_16S, denoise_other
-
-__version__ = pkg_resources.get_distribution('q2-deblur').version
-__all__ = ['denoise_16S', 'denoise_other']
