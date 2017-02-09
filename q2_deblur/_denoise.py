@@ -30,7 +30,7 @@ _valid_inputs = {
     'indel_max': _WHOLE_NUM,
     'min_reads': _WHOLE_NUM,
     'min_size': _WHOLE_NUM,
-    'jobs_to_start': _WHOLE_NUM,
+    'jobs_to_start': _NAT_NUM,
     'hashed_feature_ids': _SKIP,
     'demultiplexed_seqs': _SKIP,
     'reference_seqs': _SKIP

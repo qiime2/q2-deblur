@@ -9,7 +9,8 @@ import qiime2.plugin
 from q2_types.feature_table import FeatureTable, Frequency
 from q2_types.feature_data import FeatureData, Sequence
 from q2_types.sample_data import SampleData
-from q2_types.per_sample_sequences import SequencesWithQuality
+from q2_types.per_sample_sequences import (SequencesWithQuality,
+                                           PairedEndSequencesWithQuality)
 
 import q2_deblur
 
@@ -71,7 +72,8 @@ _outputs = [('table', FeatureTable[Frequency]),
 plugin.methods.register_function(
     function=q2_deblur.denoise_16S,
     inputs={
-        'demultiplexed_seqs': SampleData[SequencesWithQuality],
+        'demultiplexed_seqs': SampleData[SequencesWithQuality |
+                                         PairedEndSequencesWithQuality],
     },
     parameters=_parameters,
     outputs=_outputs,
@@ -80,19 +82,25 @@ plugin.methods.register_function(
     },
     parameter_descriptions=_parameter_descriptions,
     output_descriptions=_output_descriptions,
-    name='Deblur sequences.',
-    description=('Perform sequence quality control using the deblur workflow '
-                 'using a 16S reference. The specific reference used is the '
-                 '88% OTUs from Greengenes 13_8. The reference is used to '
-                 'assess whether each sequence is likely to be 16S by a local '
-                 'alignment using SortMeRNA with a permissive e-value.')
+    name='Deblur sequences using a 16S positive filter.',
+    description=('Perform sequence quality control for Illumina data using '
+                 'the Deblur workflow with a 16S reference as a positive '
+                 'filter. Only forward reads are supported at this time. The '
+                 'specific reference used is the 88% OTUs from Greengenes '
+                 '13_8. This mode of operation should only be used when data '
+                 'were generated from a 16S amplicon protocol on an Illumina '
+                 'platform. The reference is only used to assess whether each '
+                 'sequence is likely to be 16S by a local alignment using '
+                 'SortMeRNA with a permissive e-value; the reference is not '
+                 'used to characterize the sequences.')
 )
 
 
 plugin.methods.register_function(
     function=q2_deblur.denoise_other,
     inputs={
-        'demultiplexed_seqs': SampleData[SequencesWithQuality],
+        'demultiplexed_seqs': SampleData[SequencesWithQuality |
+                                         PairedEndSequencesWithQuality],
         'reference_seqs': FeatureData[Sequence],
     },
     parameters=_parameters,
@@ -104,13 +112,15 @@ plugin.methods.register_function(
     },
     parameter_descriptions=_parameter_descriptions,
     output_descriptions=_output_descriptions,
-    name='Deblur sequences and retain those similar to the reference.',
-    description=('Perform sequence quality control using the deblur workflow, '
-                 'including positive alignment-based filtering. This mode of '
-                 'execution is particularly useful when operating on non-16S '
-                 'data. For example, to apply Deblur to 18S data, you would '
-                 'want to specify a reference composed of 18S sequences in '
-                 'order to filter out sequences which do not appear to be '
-                 '18S. The assessment is performed by local alignment using '
-                 'SortMeRNA with a permissive e-value threshold.')
+    name='Deblur sequences using a user-specified positive filter.',
+    description=('Perform sequence quality control for Illumina data using '
+                 'the Deblur workflow, including positive alignment-based '
+                 'filtering. Only forward reads are supported at this time. '
+                 'This mode of execution is particularly useful when '
+                 'operating on non-16S data. For example, to apply Deblur to '
+                 '18S data, you would want to specify a reference composed of '
+                 '18S sequences in order to filter out sequences which do not '
+                 'appear to be 18S. The assessment is performed by local '
+                 'alignment using SortMeRNA with a permissive e-value '
+                 'threshold.')
 )
