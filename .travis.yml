@@ -12,7 +12,7 @@ install:
   - source activate test-env
   - conda install --yes -c bioconda VSEARCH MAFFT SortMeRNA==2.0 biom-format
     #- conda install --yes -c biocore deblur
-  - pip install https://github.com/biocore/deblur/archive/2017.2.0.zip
+  - pip install https://github.com/biocore/deblur/archive/master.zip
   - pip install https://github.com/qiime2/qiime2/archive/2017.2.0.zip https://github.com/qiime2/q2-types/archive/2017.2.0.zip https://github.com/qiime2/q2cli/archive/2017.2.0.zip
   - pip install .
   - git clone https://github.com/qiime2/q2lint
