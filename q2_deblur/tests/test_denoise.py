@@ -22,10 +22,11 @@ from q2_deblur import denoise_16S, denoise_other
 from q2_deblur._denoise import _load_table, _hash_ids
 
 
+# shamelessly adapted from q2-dada2
 def _sort_seqs(seqs):
     return sorted(list(seqs), key=lambda x: x.metadata['id'])
 
-
+# structure shamelessly adapted from q2-dada2
 class TestDenoiseUtil(TestPluginBase):
     package = 'q2_deblur.tests'
 
@@ -89,6 +90,7 @@ class TestDenoise16S(TestPluginBase):
             denoise_16S(self.demux_seqs, 100, min_size=-1)
 
 
+# structure shamelessly adapted from q2-dada2
 class TestDenoiseOther(TestPluginBase):
     package = 'q2_deblur.tests'
 

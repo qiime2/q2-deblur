@@ -22,7 +22,6 @@ from q2_types.feature_data import (DNAIterator, DNAFASTAFormat)
 _GTE_NEG_1 = (lambda x: x >= -1, 'non-negative; -1 to disable')
 _WHOLE_NUM = (lambda x: x >= 0, 'non-negative')
 _NAT_NUM = (lambda x: x > 0, 'greater than zero')
-# Better to choose to skip, than to implicitly ignore things that KeyError
 _SKIP = (lambda x: True, '')
 _valid_inputs = {
     'trim_length': _GTE_NEG_1,
@@ -32,14 +31,13 @@ _valid_inputs = {
     'min_reads': _WHOLE_NUM,
     'min_size': _WHOLE_NUM,
     'jobs_to_start': _WHOLE_NUM,
-    # Skipped because they are valid for whole domain of type
     'hashed_feature_ids': _SKIP,
     'demultiplexed_seqs': _SKIP,
     'reference_seqs': _SKIP
 }
 
 
-# TODO: Replace this with Range predicates when interfaces support them better
+# shamelessly adapted from q2-dada2
 def _check_inputs(**kwargs):
     for param, arg in kwargs.items():
         check_is_valid, explanation = _valid_inputs[param]
@@ -59,6 +57,7 @@ def _load_table(base_path):
 def _hash_ids(table):
     """Compute the MD5 of every sequence, update table, return mapping"""
     # Make feature IDs the md5 sums of the sequences.
+    # shamelessly adapted from q2-dada2
     fid_map = {id_: hashlib.md5(id_.encode('utf-8')).hexdigest()
                for id_ in table.ids(axis='observation')}
     table.update_ids(fid_map, axis='observation', inplace=True)
