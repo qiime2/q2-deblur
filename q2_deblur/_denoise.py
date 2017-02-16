@@ -133,6 +133,7 @@ def _denoise_helper(
                '--trim-length', str(trim_length),
                '--min-reads', str(min_reads),
                '--min-size', str(min_size),
+               '--jobs-to-start', str(jobs_to_start),
                '-w']
 
         if reference_seqs is not None:
