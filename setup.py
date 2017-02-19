@@ -9,7 +9,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="q2-deblur",
-    version="2017.2.2",
+    version="2017.2.0.dev0",
     packages=find_packages(),
     install_requires=['qiime2 == 2017.2.*', 'pandas', 'q2-types == 2017.2.*',
                       'deblur >= 0.1.8'],
