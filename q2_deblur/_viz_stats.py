@@ -30,9 +30,8 @@ def visualize_stats(output_dir: str, filter_stats: pd.DataFrame) -> None:
     total_artifact = filter_stats['reads-hit-artifact']
     total_artifact += total_input - filter_stats['reads-derep']
     filter_stats['fraction-artifact-with-minsize'] = \
-            total_artifact / total_input
+        total_artifact / total_input
 
-    total_ref = filter_stats['reads-hit-reference']
     total_not_ref = filter_stats['reads-missed-reference']
     total_deblur = filter_stats['reads-deblur']
     filter_stats['fraction-missed-reference'] = total_not_ref / total_deblur
@@ -53,4 +52,3 @@ def visualize_stats(output_dir: str, filter_stats: pd.DataFrame) -> None:
     }
 
     q2templates.render(index, output_dir, context=context)
-

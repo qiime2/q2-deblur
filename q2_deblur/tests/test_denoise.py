@@ -134,8 +134,9 @@ class TestDenoise16S(TestPluginBase):
         _, _, obs_stats = denoise_16S(self.demux_seqs, 100, sample_stats=True)
         pdt.assert_frame_equal(obs_stats, exp_stats)
 
-# structure shamelessly adapted from q2-dada2
+
 class TestDenoiseOther(TestPluginBase):
+    # structure shamelessly adapted from q2-dada2
     package = 'q2_deblur.tests'
 
     def setUp(self):
@@ -155,7 +156,8 @@ class TestDenoiseOther(TestPluginBase):
         for seq in exp_rep_seqs:
             del seq.metadata['description']
 
-        obs_tab, rep_seqs, stats = denoise_other(self.demux_seqs, self.ref, 100)
+        obs_tab, rep_seqs, stats = denoise_other(self.demux_seqs, self.ref,
+                                                 100)
 
         rep_seqs = _sort_seqs(rep_seqs)
         exp_rep_seqs = _sort_seqs(exp_rep_seqs)

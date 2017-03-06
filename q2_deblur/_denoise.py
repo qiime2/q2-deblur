@@ -19,7 +19,6 @@ from q2_types.per_sample_sequences import \
         SingleLanePerSampleSingleEndFastqDirFmt, FastqGzFormat
 from q2_types.feature_data import (DNAIterator, DNAFASTAFormat)
 
-from q2_deblur._type import DeblurStats
 from q2_deblur._format import STATS_HEADER
 
 
@@ -223,18 +222,18 @@ def _gather_stats(demux, tmp):
         # the negative reference database is composed of PhiX and
         # a 16S Illumina adapter.
         nonartifact_unique, nonartifact_counts = \
-                _fasta_counts(workingdir, fname, 'trim.derep.no_artifacts')
+            _fasta_counts(workingdir, fname, 'trim.derep.no_artifacts')
 
         reads_hit_artifact = reads_derep - nonartifact_counts
         unique_reads_hit_artifact = unique_reads_derep - nonartifact_unique
 
         unique_reads_deblur, reads_deblur = \
-                _fasta_counts(workingdir, fname,
-                              'trim.derep.no_artifacts.msa.deblur')
+            _fasta_counts(workingdir, fname,
+                          'trim.derep.no_artifacts.msa.deblur')
 
         unique_reads_chim, reads_chim = \
-                _fasta_counts(workingdir, fname,
-                              'trim.derep.no_artifacts.msa.deblur.no_chimeras')
+            _fasta_counts(workingdir, fname,
+                          'trim.derep.no_artifacts.msa.deblur.no_chimeras')
         unique_reads_chim = unique_reads_deblur - unique_reads_chim
         reads_chim = reads_deblur - reads_chim
 
@@ -249,7 +248,7 @@ def _gather_stats(demux, tmp):
 
         reads_missed_ref = final_reads_deblur - reads_hit_ref
         unique_reads_missed_ref = \
-                final_unique_reads_deblur - unique_reads_hit_ref
+            final_unique_reads_deblur - unique_reads_hit_ref
 
         stats.append((sample_id, raw_counts,
                       unique_reads_derep, reads_derep,
@@ -269,7 +268,7 @@ def _fasta_counts(workingdir, sample_id, suffix):
     counts = 0
     unique = 0
     with open(os.path.join(workingdir, '%s.%s' % (sample_id, suffix))) as fh:
-        for seq_header, seq  in itertools.zip_longest(*[fh] * 2):
+        for seq_header, seq in itertools.zip_longest(*[fh] * 2):
             # >foo stuff;size=123;
             size = seq_header.rsplit(';', 2)[1]
             counts += int(size.split('=')[1])
