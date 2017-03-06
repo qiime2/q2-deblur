@@ -56,8 +56,8 @@ STATS_DESCRIPTIONS = {
     'reads-raw': "The number of reads presented to Deblur",
     'unique-reads-derep': "The number of unique reads following dereplicaton",
     'reads-derep': ("The number of reads following dereplication. IMPORTANT: "
-                    "the minsize parameter is accounted at this step; if using "
-                    "defaults, singletons will not be included here."),
+                    "the minsize parameter is accounted at this step; if using"
+                    " defaults, singletons will not be included here."),
     'unique-reads-deblur': "The number of unique reads following Deblur",
     'reads-deblur': ("The number of reads following Deblur. IMPORTANT: Deblur "
                      "adjusts frequencies so the read counts after factoring "

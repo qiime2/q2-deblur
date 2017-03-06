@@ -19,5 +19,5 @@ script:
   - nosetests
   - flake8 q2_deblur setup.py
   - python q2lint/q2lint.py
-  - qiime deblur denoise-16S --i-demultiplexed-seqs q2_deblur/assets/demux.qza --o-table denoised.qza --o-representative-sequences reps.qza --p-trim-length 100
-  - qiime deblur denoise-other --i-demultiplexed-seqs q2_deblur/assets/demux.qza --o-table denoised.qza --o-representative-sequences reps.qza --i-reference-seqs q2_deblur/assets/test_reference.qza --p-trim-length 100
+  - qiime deblur denoise-16S --i-demultiplexed-seqs q2_deblur/assets/demux.qza --o-table denoised.qza --o-representative-sequences reps.qza --o-stats stats.qza --p-trim-length 100
+  - qiime deblur denoise-other --i-demultiplexed-seqs q2_deblur/assets/demux.qza --o-table denoised.qza --o-representative-sequences reps.qza --o-stats stats.qza --i-reference-seqs q2_deblur/assets/test_reference.qza --p-trim-length 100

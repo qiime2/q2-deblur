@@ -30,6 +30,8 @@ COMPUTED_DESCRIPTIONS = {
         'The fraction of reads which failed to recruit to the reference. This '
         'is computed as '
         'reads-missed-reference / (reads-deblur - reads-chimeric)')}
+
+
 def visualize_stats(output_dir: str, deblur_stats: pd.DataFrame) -> None:
     total_artifact = deblur_stats['reads-hit-artifact']
     total_input = deblur_stats['reads-raw']
