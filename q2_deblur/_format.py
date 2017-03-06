@@ -51,6 +51,49 @@ STATS_HEADER = ['sample-id',
                 'unique-reads-missed-reference',
                 'reads-missed-reference']
 
+STATS_DESCRIPTIONS = {
+    'sample-id': "The sample ID",
+    'reads-raw': "The number of reads presented to Deblur",
+    'unique-reads-derep': "The number of unique reads following dereplicaton",
+    'reads-derep': ("The number of reads following dereplication. IMPORTANT: "
+                    "the minsize parameter is accounted at this step; if using "
+                    "defaults, singletons will not be included here."),
+    'unique-reads-deblur': "The number of unique reads following Deblur",
+    'reads-deblur': ("The number of reads following Deblur. IMPORTANT: Deblur "
+                     "adjusts frequencies so the read counts after factoring "
+                     "in singletons may not sum to the total input reads"),
+    'unique-reads-hit-artifact': ("The number of unique reads which recruited "
+                                  "to the negative filter database. This is "
+                                  "assessed following the application of "
+                                  "Deblur"),
+    'reads-hit-artifact': ("The number of reads which recruited to the "
+                           "negative filter database. This is assessed "
+                           "following the application of Deblur."),
+    'unique-reads-chimeric': ("The number of unique reads which appear to be "
+                              "chimeric. This is assessed following Deblur."),
+    'reads-chimeric': ("The number of reads which appear to be chimeric. This "
+                       "is assessed following Deblur."),
+    'unique-reads-hit-reference': ("The number of unique Deblur reads which "
+                                   "recruited to the positive reference. "
+                                   "IMPORTANT: this is assessed after the "
+                                   "removal of features below the min-reads "
+                                   "threshold."),
+    'reads-hit-reference': ("The number of Deblur reads which recruited to the"
+                            " positive reference. IMPORTANT: this is "
+                            "assessed after the removal of features below the "
+                            "min-reads threshold."),
+    'unique-reads-missed-reference': ("The number of unique Deblur reads "
+                                      "which failed to recruit to the positive"
+                                      " reference. IMPORTANT: this is "
+                                      "assessed after the removal of features "
+                                      "below the min-reads threshold."),
+    'reads-missed-reference': ("The number of Deblur reads which failed to "
+                               "recruit to the positive reference. "
+                               "IMPORTANT: this is assessed after the "
+                               "removal of features below the min-reads "
+                               "threshold.")
+    }
+
 
 class DeblurStatsFmt(model.TextFileFormat):
     def sniff(self):

@@ -139,4 +139,16 @@ plugin.methods.register_function(
                  'threshold.')
 )
 
+plugin.visualizers.register_function(
+    function=q2_deblur.visualize_stats,
+    inputs={'deblur_stats': DeblurStats},
+    parameters={},
+    input_descriptions={
+        'deblur_stats': 'Summary statistics of the Deblur process.'
+    },
+    parameter_descriptions={},
+    name='Visualize Deblur stats per sample.',
+    description='Display Deblur statistics per sample'
+)
+
 importlib.import_module('q2_deblur._transformer')
