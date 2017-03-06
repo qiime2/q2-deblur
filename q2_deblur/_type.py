@@ -5,11 +5,7 @@
 #
 # The full license is in the file LICENSE, distributed with this software.
 # ----------------------------------------------------------------------------
-import pkg_resources
 
-from ._denoise import denoise_16S, denoise_other
-from ._viz_stats import visualize_stats
+from qiime2.plugin import SemanticType
 
-
-__version__ = pkg_resources.get_distribution('q2-deblur').version
-__all__ = ['denoise_16S', 'denoise_other', 'visualize_stats']
+DeblurStats = SemanticType('DeblurStats')

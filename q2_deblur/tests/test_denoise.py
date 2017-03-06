@@ -12,6 +12,8 @@ import unittest
 
 import skbio
 import biom
+import pandas as pd
+import pandas.util.testing as pdt
 from qiime2 import Artifact
 from qiime2.plugin.testing import TestPluginBase
 from q2_types.per_sample_sequences import (
@@ -19,7 +21,9 @@ from q2_types.per_sample_sequences import (
 from q2_types.feature_data import DNAFASTAFormat
 
 from q2_deblur import denoise_16S, denoise_other
-from q2_deblur._denoise import _load_table, _hash_ids
+from q2_deblur._format import STATS_HEADER
+from q2_deblur._denoise import (_load_table, _hash_ids, _fasta_counts,
+                                _read_fastq_seqs)
 
 
 # shamelessly adapted from q2-dada2
@@ -34,6 +38,18 @@ class TestDenoiseUtil(TestPluginBase):
     def setUp(self):
         super().setUp()
         self.table = self.get_data_path('expected/util')
+
+    def test_fasta_counts(self):
+        exp_unique, exp_count = 2, 123
+        obs_unique, obs_count = _fasta_counts(self.get_data_path('./'),
+                                              'test', 'fasta')
+        self.assertEqual(obs_unique, exp_unique)
+        self.assertEqual(obs_count, exp_count)
+
+    def test_read_fastq_seqs(self):
+        exp = 3
+        obs = _read_fastq_seqs(self.get_data_path('test.fastq.gz'))
+        self.assertEqual(obs, exp)
 
     def test_load_table(self):
         exp = biom.example_table.copy()
@@ -68,13 +84,15 @@ class TestDenoise16S(TestPluginBase):
         for seq in exp_rep_seqs:
             del seq.metadata['description']
 
-        obs_tab, rep_seqs = denoise_16S(self.demux_seqs, 100)
+        obs_tab, rep_seqs, stats = denoise_16S(self.demux_seqs, 100)
 
         rep_seqs = _sort_seqs(rep_seqs)
         exp_rep_seqs = _sort_seqs(exp_rep_seqs)
 
         self.assertEqual(obs_tab, exp_tab)
         self.assertEqual(rep_seqs, exp_rep_seqs)
+        self.assertEqual(list(stats.columns), STATS_HEADER)
+        self.assertEqual(len(stats), 0)
 
     def test_all_reads_filtered(self):
         with self.assertRaisesRegex(ValueError, 'filter'):
@@ -90,6 +108,31 @@ class TestDenoise16S(TestPluginBase):
         with self.assertRaisesRegex(ValueError, 'min_size'):
             denoise_16S(self.demux_seqs, 100, min_size=-1)
 
+    def test_with_stats(self):
+        # manually assessed based on temp output
+        #                            derep   dblr    art   chim  ref    miss
+        exp_stats = [('L1S208', 100, 11, 69, 11, 64, 0, 0, 1, 2, 5, 46, 0, 0),
+                     ('L1S257', 100, 12, 67, 12, 63, 0, 0, 0, 0, 4, 43, 0, 0),
+                     ('L1S57',  100, 11, 60, 11, 58, 0, 0, 0, 0, 4, 39, 0, 0),
+                     ('L1S76',  100, 11, 74, 10, 70, 0, 0, 0, 0, 3, 43, 0, 0),
+                     ('L2S155', 100, 12, 40, 12, 40, 0, 0, 0, 0, 7, 29, 0, 0),
+                     ('L2S175', 100, 11, 44, 11, 42, 0, 0, 0, 0, 6, 33, 0, 0),
+                     ('L2S309', 100, 10, 38, 10, 38, 0, 0, 0, 0, 3, 23, 0, 0),
+                     ('L2S357', 100,  8, 42,  8, 42, 0, 0, 0, 0, 4, 33, 0, 0),
+                     ('L3S294', 100, 10, 33, 10, 33, 0, 0, 0, 0, 4, 18, 0, 0),
+                     ('L3S313', 100, 12, 42, 12, 42, 0, 0, 0, 0, 5, 28, 0, 0),
+                     ('L4S112', 100,  9, 36,  9, 36, 0, 0, 0, 0, 8, 34, 0, 0),
+                     ('L4S63',  100,  9, 33,  9, 33, 0, 0, 0, 0, 3, 19, 0, 0),
+                     ('L5S155', 100, 10, 44, 10, 44, 0, 0, 0, 0, 5, 32, 0, 0),
+                     ('L5S174', 100, 13, 50, 13, 48, 0, 0, 0, 0, 4, 25, 0, 0),
+                     ('L6S20',  100,  9, 45,  8, 43, 0, 0, 0, 0, 6, 39, 0, 0),
+                     ('L6S68',  100, 14, 35, 14, 35, 0, 0, 0, 0, 5, 14, 0, 0)]
+
+        exp_stats = pd.DataFrame(exp_stats, columns=STATS_HEADER)
+        exp_stats.set_index('sample-id', inplace=True)
+
+        _, _, obs_stats = denoise_16S(self.demux_seqs, 100, sample_stats=True)
+        pdt.assert_frame_equal(obs_stats, exp_stats)
 
 # structure shamelessly adapted from q2-dada2
 class TestDenoiseOther(TestPluginBase):
@@ -112,13 +155,15 @@ class TestDenoiseOther(TestPluginBase):
         for seq in exp_rep_seqs:
             del seq.metadata['description']
 
-        obs_tab, rep_seqs = denoise_other(self.demux_seqs, self.ref, 100)
+        obs_tab, rep_seqs, stats = denoise_other(self.demux_seqs, self.ref, 100)
 
         rep_seqs = _sort_seqs(rep_seqs)
         exp_rep_seqs = _sort_seqs(exp_rep_seqs)
 
         self.assertEqual(rep_seqs, exp_rep_seqs)
         self.assertEqual(obs_tab, exp_tab)
+        self.assertEqual(list(stats.columns), STATS_HEADER)
+        self.assertEqual(len(stats), 0)
 
     def test_all_reads_filtered(self):
         with self.assertRaisesRegex(ValueError, 'filter'):
