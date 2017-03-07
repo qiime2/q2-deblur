@@ -82,8 +82,9 @@ def visualize_stats(output_dir: str, deblur_stats: pd.DataFrame) -> None:
         if '<th>' in entry and entry.strip() != '<th></th>':
             label = regex.findall(entry)[0]
             desc = description_sources[label]
-            label = '<th data-toggle="tooltip" title="%s">%s</th>' % (desc,
-                                                                      label)
+            label = ('<th data-toggle="tooltip" '
+                     'title="%s" '
+                     'data-tsorter="numeric">%s</th>' % (desc, label))
             new_entry = label
         new_header.append(new_entry)
     htmlparts[headstart:headend] = new_header
