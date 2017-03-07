@@ -91,7 +91,7 @@ class TestDenoise16S(TestPluginBase):
 
         self.assertEqual(obs_tab, exp_tab)
         self.assertEqual(rep_seqs, exp_rep_seqs)
-        self.assertEqual(list(stats.columns), STATS_HEADER)
+        self.assertEqual(list(stats.columns), STATS_HEADER[1:])
         self.assertEqual(len(stats), 0)
 
     def test_all_reads_filtered(self):
@@ -164,7 +164,7 @@ class TestDenoiseOther(TestPluginBase):
 
         self.assertEqual(rep_seqs, exp_rep_seqs)
         self.assertEqual(obs_tab, exp_tab)
-        self.assertEqual(list(stats.columns), STATS_HEADER)
+        self.assertEqual(list(stats.columns), STATS_HEADER[1:])
         self.assertEqual(len(stats), 0)
 
     def test_all_reads_filtered(self):
