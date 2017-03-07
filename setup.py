@@ -19,7 +19,7 @@ setup(
     entry_points={
         "qiime2.plugins":
         ["q2-deblur=q2_deblur.plugin_setup:plugin"]
-    }
+    },
     package_data={
         "q2_deblur": ["assets/index.html"]
     }
