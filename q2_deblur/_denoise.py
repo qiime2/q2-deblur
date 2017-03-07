@@ -238,8 +238,15 @@ def _gather_stats(demux, tmp):
         unique_reads_chim = unique_reads_deblur - unique_reads_chim
         reads_chim = reads_deblur - reads_chim
 
-        all_data = all_table.data(sample_id, dense=False)
-        ref_data = ref_table.data(sample_id, dense=False)
+        if all_table.exists(sample_id):
+            all_data = all_table.data(sample_id, dense=False)
+        else:
+            all_data = np.zeros((1))
+
+        if ref_data.exists(sample_id):
+            ref_data = ref_table.data(sample_id, dense=False)
+        else:
+            ref_data = np.zeros((1))
 
         final_reads_deblur = all_data.sum()
         final_unique_reads_deblur = (all_data > 0).sum()
@@ -268,7 +275,12 @@ def _fasta_counts(workingdir, sample_id, suffix):
     # http://stackoverflow.com/a/39302117/3424666
     counts = 0
     unique = 0
-    with open(os.path.join(workingdir, '%s.%s' % (sample_id, suffix))) as fh:
+
+    path = os.path.join(workingdir, '%s.%s' % (sample_id, suffix))
+    if not os.path.exists(path):
+        return 0, 0
+
+    with open(os.path.join(path)) as fh:
         for seq_header, seq in itertools.zip_longest(*[fh] * 2):
             # >foo stuff;size=123;
             size = seq_header.rsplit(';', 2)[1]
@@ -278,5 +290,8 @@ def _fasta_counts(workingdir, sample_id, suffix):
 
 
 def _read_fastq_seqs(filepath):
+    if not os.path.exists(filepath):
+        return 0
+
     fh = gzip.open(filepath, 'rt')
     return sum(1 for _ in fh) / 4
