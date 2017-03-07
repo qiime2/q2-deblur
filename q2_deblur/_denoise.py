@@ -188,6 +188,7 @@ def _denoise_helper(
             stats = _gather_stats(demultiplexed_seqs, tmp)
         else:
             stats = pd.DataFrame([], columns=STATS_HEADER)
+            stats.set_index('sample-id', inplace=True)
 
     return (table, rep_sequences, stats)
 
