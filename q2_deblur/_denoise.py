@@ -12,6 +12,7 @@ import hashlib
 import gzip
 import itertools
 
+import numpy as np
 import biom
 import skbio
 import pandas as pd
