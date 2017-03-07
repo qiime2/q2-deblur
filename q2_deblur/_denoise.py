@@ -244,7 +244,7 @@ def _gather_stats(demux, tmp):
         else:
             all_data = np.zeros((1))
 
-        if ref_data.exists(sample_id):
+        if ref_table.exists(sample_id):
             ref_data = ref_table.data(sample_id, dense=False)
         else:
             ref_data = np.zeros((1))
