@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-xs-6">
+        <h1>Per-sample Deblur stats</h1>
+        <p>
+            <i>Click on a Column header to sort the table.</i>
+        </p>
+        <p> 
+            <i>Mouse over a Column header to get a description.</i>
+        </p>
+        {{ result }}
+		<script src="./js/tsorter.min.js" type="text/javascript"></script>
+        <script type="text/javascript">
+          function init() {
+            var sorter = tsorter.create('stats');
+          }
+          window.onload = init;
+        </script>
+        <style media="screen">
+          #stats th.descend:after{
+            content: "\25B2";
+          }
+          #stats th.ascend:after{
+            content: "\25BC";
+          }
+        </style>
+    </div>
+</div>
+{% endblock %}

@@ -6,6 +6,7 @@
 # The full license is in the file LICENSE, distributed with this software.
 # ----------------------------------------------------------------------------
 import qiime2.plugin
+import importlib
 from q2_types.feature_table import FeatureTable, Frequency
 from q2_types.feature_data import FeatureData, Sequence
 from q2_types.sample_data import SampleData
@@ -13,6 +14,9 @@ from q2_types.per_sample_sequences import (SequencesWithQuality,
                                            PairedEndSequencesWithQuality)
 
 import q2_deblur
+
+from q2_deblur._type import DeblurStats
+from q2_deblur._format import DeblurStatsFmt, DeblurStatsDirFmt
 
 
 plugin = qiime2.plugin.Plugin(
@@ -30,6 +34,12 @@ plugin = qiime2.plugin.Plugin(
 )
 
 
+plugin.register_formats(DeblurStatsFmt, DeblurStatsDirFmt)
+plugin.register_semantic_types(DeblurStats)
+plugin.register_semantic_type_to_format(DeblurStats,
+                                        artifact_format=DeblurStatsDirFmt)
+
+
 _parameter_descriptions = {
     'mean_error': ("The mean per nucleotide error, used for original "
                    "sequence estimate."),
@@ -43,13 +53,15 @@ _parameter_descriptions = {
     'min_size': ("In each sample, discard all features with an abundance "
                  "less than min_size."),
     'jobs_to_start': "Number of jobs to start (if to run in parallel).",
-    'hashed_feature_ids': "If true, hash the feature IDs."
+    'hashed_feature_ids': "If true, hash the feature IDs.",
+    'sample_stats': "If true, gather stats per sample."
 }
 
 
 _output_descriptions = {
     'table': 'The resulting denoised feature table.',
-    'representative_sequences': 'The resulting feature sequences.'
+    'representative_sequences': 'The resulting feature sequences.',
+    'stats': 'Per-sample stats if requested.'
 }
 
 
@@ -61,12 +73,14 @@ _parameters = {
     'min_reads': qiime2.plugin.Int,
     'min_size': qiime2.plugin.Int,
     'jobs_to_start': qiime2.plugin.Int,
-    'hashed_feature_ids': qiime2.plugin.Bool
+    'hashed_feature_ids': qiime2.plugin.Bool,
+    'sample_stats': qiime2.plugin.Bool
 }
 
 
 _outputs = [('table', FeatureTable[Frequency]),
-            ('representative_sequences', FeatureData[Sequence])]
+            ('representative_sequences', FeatureData[Sequence]),
+            ('stats', DeblurStats)]
 
 
 plugin.methods.register_function(
@@ -124,3 +138,17 @@ plugin.methods.register_function(
                  'alignment using SortMeRNA with a permissive e-value '
                  'threshold.')
 )
+
+plugin.visualizers.register_function(
+    function=q2_deblur.visualize_stats,
+    inputs={'deblur_stats': DeblurStats},
+    parameters={},
+    input_descriptions={
+        'deblur_stats': 'Summary statistics of the Deblur process.'
+    },
+    parameter_descriptions={},
+    name='Visualize Deblur stats per sample.',
+    description='Display Deblur statistics per sample'
+)
+
+importlib.import_module('q2_deblur._transformer')
