@@ -30,7 +30,7 @@ plugin = qiime2.plugin.Plugin(
                    "A. Navas-Molina, Evguenia Kopylova, Jamie Morton, "
                    "Zhenjiang Zech Xu, Eric P. Kightley, Luke R. Thompson, "
                    "Embriette R. Hyde, Antonio Gonzalez, Rob Knight. mSystems "
-                   "(in press).")
+                   "Mar 2017, 2 (2) doi:10.1128/mSystems.00191-16.")
 )
 
 
