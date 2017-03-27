@@ -5,14 +5,17 @@
 #
 # The full license is in the file LICENSE, distributed with this software.
 # ----------------------------------------------------------------------------
+
 from setuptools import setup, find_packages
+
+import versioneer
+
 
 setup(
     name="q2-deblur",
-    version="2017.3.0.dev",
+    version=versioneer.get_version(),
+    cmdclass=versioneer.get_cmdclass(),
     packages=find_packages(),
-    install_requires=['qiime2 == 2017.3.*', 'pandas', 'q2-types == 2017.3.*',
-                      'deblur >= 1.0.2', 'q2templates == 2017.3.*'],
     author="Daniel McDonald",
     author_email="wasade@gmail.com",
     description="Sequence quality control with deblur",
@@ -22,5 +25,6 @@ setup(
     },
     package_data={
         "q2_deblur": ["assets/index.html"]
-    }
+    },
+    zip_safe=True,
 )
