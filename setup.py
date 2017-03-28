@@ -15,6 +15,7 @@ setup(
     name="q2-deblur",
     version=versioneer.get_version(),
     cmdclass=versioneer.get_cmdclass(),
+    license='BSD-3-Clause',
     packages=find_packages(),
     author="Daniel McDonald",
     author_email="wasade@gmail.com",
