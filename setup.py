@@ -26,6 +26,11 @@ setup(
     },
     package_data={
         "q2_deblur": ["assets/index.html"]
+        'q2_deblur.tests': ['data/*',
+                            'data/expected/*',
+                            'data/expected/util/*',
+                            'data/sample_seqs_16S/*',
+                            'data/sample_seqs_other/*']
     },
     zip_safe=False,
 )
