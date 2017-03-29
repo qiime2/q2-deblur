@@ -25,7 +25,7 @@ setup(
         ["q2-deblur=q2_deblur.plugin_setup:plugin"]
     },
     package_data={
-        "q2_deblur": ["assets/index.html"]
+        "q2_deblur": ["assets/index.html"],
         'q2_deblur.tests': ['data/*',
                             'data/expected/*',
                             'data/expected/util/*',
