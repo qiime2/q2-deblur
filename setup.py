@@ -12,7 +12,7 @@ setup(
     version="2017.2.3",
     packages=find_packages(),
     install_requires=['qiime2 == 2017.2.*', 'pandas', 'q2-types == 2017.2.*',
-                      'deblur >= 1.0.1', 'q2templates == 2017.2.*'],
+                      'deblur >= 1.0.2', 'q2templates == 2017.2.*'],
     author="Daniel McDonald",
     author_email="wasade@gmail.com",
     description="Sequence quality control with deblur",
