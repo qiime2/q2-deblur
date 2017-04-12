@@ -1,8 +1,10 @@
 {% set data = load_setup_py_data() %}
+{% set version = data.get('version') %}
+{% set release = '.'.join(version.split('.')[:2]) %}
 
 package:
   name: q2-deblur
-  version: {{ data.get('version') }}
+  version: {{ version }}
 
 source:
   path: ../..
@@ -14,20 +16,15 @@ requirements:
   build:
     - python 3.5*
     - setuptools
-    - pandas
-    - deblur 1.0.1
-    - qiime2 2017.3.*
-    - q2templates 2017.3.*
-    - q2-types 2017.3.*
 
   run:
     - python 3.5*
     - setuptools
     - pandas
     - deblur 1.0.1
-    - qiime2 2017.3.*
-    - q2templates 2017.3.*
-    - q2-types 2017.3.*
+    - qiime2 {{ release }}.*
+    - q2templates {{ release }}.*
+    - q2-types {{ release }}.*
 
 test:
   imports:
