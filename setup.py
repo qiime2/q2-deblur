@@ -9,10 +9,10 @@ from setuptools import setup, find_packages
 
 setup(
     name="q2-deblur",
-    version="2017.2.4",
+    version="2017.3.0.dev",
     packages=find_packages(),
-    install_requires=['qiime2 == 2017.2.*', 'pandas', 'q2-types == 2017.2.*',
-                      'deblur >= 1.0.2', 'q2templates == 2017.2.*'],
+    install_requires=['qiime2 == 2017.3.*', 'pandas', 'q2-types == 2017.3.*',
+                      'deblur >= 1.0.2', 'q2templates == 2017.3.*'],
     author="Daniel McDonald",
     author_email="wasade@gmail.com",
     description="Sequence quality control with deblur",
