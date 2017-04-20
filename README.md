@@ -1,9 +1,5 @@
-# Deblur QIIME 2 plugin
+# q2-deblur
 
-[![Build Status](https://travis-ci.org/wasade/q2-deblur.svg?branch=master)](https://travis-ci.org/wasade/q2-deblur)
+[![Build Status](https://travis-ci.org/qiime2/q2-deblur.svg?branch=master)](https://travis-ci.org/qiime2/q2-deblur)
 
-This package contains the Deblur QIIME 2 plugin. To learn how to use this, see https://qiime2.org. This package can be installed into a QIIME2 `2017.2` environment via conda with:
-
-```
-$ conda install -c biocore q2-deblur
-```
+This is a QIIME 2 plugin. For details on QIIME 2, see https://qiime2.org.
