@@ -24,13 +24,15 @@ plugin = qiime2.plugin.Plugin(
     version=q2_deblur.__version__,
     website='https://github.com/biocore/deblur',
     package='q2_deblur',
-    user_support_text='https://github.com/biocore/deblur/issues',
     citation_text=("Deblur rapidly resolves single-nucleotide community "
                    "sequence patterns. Amnon Amir, Daniel McDonald, Jose "
                    "A. Navas-Molina, Evguenia Kopylova, Jamie Morton, "
                    "Zhenjiang Zech Xu, Eric P. Kightley, Luke R. Thompson, "
                    "Embriette R. Hyde, Antonio Gonzalez, Rob Knight. mSystems "
-                   "Mar 2017, 2 (2) doi:10.1128/mSystems.00191-16.")
+                   "Mar 2017, 2 (2) doi:10.1128/mSystems.00191-16."),
+    description=('This QIIME 2 plugin wraps the Deblur software for '
+                 'performing sequence quality control.'),
+    short_description='Plugin for sequence quality control with Deblur.'
 )
 
 
