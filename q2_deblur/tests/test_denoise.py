@@ -31,6 +31,12 @@ def _sort_seqs(seqs):
     return sorted(list(seqs), key=lambda x: x.metadata['id'])
 
 
+def _align_table(table, reference):
+    t = table.sort_order(reference.ids())
+    return t.sort_order(reference.ids(axis='observation'),
+                        axis='observation')
+
+
 # structure shamelessly adapted from q2-dada2
 class TestDenoiseUtil(TestPluginBase):
     package = 'q2_deblur.tests'
@@ -88,6 +94,7 @@ class TestDenoise16S(TestPluginBase):
 
         rep_seqs = _sort_seqs(rep_seqs)
         exp_rep_seqs = _sort_seqs(exp_rep_seqs)
+        obs_tab = _align_table(obs_tab, exp_tab)
 
         self.assertEqual(obs_tab, exp_tab)
         self.assertEqual(rep_seqs, exp_rep_seqs)
@@ -161,6 +168,7 @@ class TestDenoiseOther(TestPluginBase):
 
         rep_seqs = _sort_seqs(rep_seqs)
         exp_rep_seqs = _sort_seqs(exp_rep_seqs)
+        obs_tab = _align_table(obs_tab, exp_tab)
 
         self.assertEqual(rep_seqs, exp_rep_seqs)
         self.assertEqual(obs_tab, exp_tab)
