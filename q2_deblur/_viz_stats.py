@@ -59,8 +59,7 @@ def visualize_stats(output_dir: str, deblur_stats: pd.DataFrame) -> None:
                              ascending=False)
 
     deblur_stats = deblur_stats.reset_index()
-    html = deblur_stats.to_html(classes='table table-striped table-hover')
-    html = html.replace('border="1"', 'border="0"')
+    html = q2templates.df_to_html(deblur_stats)
     html = html.replace('table-hover"', 'table-hover" id="stats"')
 
     # ghetto force in tooltips
