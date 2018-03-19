@@ -21,7 +21,7 @@ requirements:
     - python 3.5*
     - setuptools
     - pandas
-    - deblur >=1.0.2
+    - deblur >=1.0.4
     - qiime2 {{ release }}.*
     - q2templates {{ release }}.*
     - q2-types {{ release }}.*
