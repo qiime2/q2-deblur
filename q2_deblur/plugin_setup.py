@@ -20,17 +20,14 @@ from q2_deblur._type import DeblurStats
 from q2_deblur._format import DeblurStatsFmt, DeblurStatsDirFmt
 
 
+citations = qiime2.plugin.Citations.load('citations.bib', package='q2_deblur')
+
 plugin = qiime2.plugin.Plugin(
     name='deblur',
     version=q2_deblur.__version__,
     website='https://github.com/biocore/deblur',
     package='q2_deblur',
-    citation_text=("Deblur rapidly resolves single-nucleotide community "
-                   "sequence patterns. Amnon Amir, Daniel McDonald, Jose "
-                   "A. Navas-Molina, Evguenia Kopylova, Jamie Morton, "
-                   "Zhenjiang Zech Xu, Eric P. Kightley, Luke R. Thompson, "
-                   "Embriette R. Hyde, Antonio Gonzalez, Rob Knight. mSystems "
-                   "Mar 2017, 2 (2) doi:10.1128/mSystems.00191-16."),
+    citations=[citations['amir2017deblur']],
     description=('This QIIME 2 plugin wraps the Deblur software for '
                  'performing sequence quality control.'),
     short_description='Plugin for sequence quality control with Deblur.'
