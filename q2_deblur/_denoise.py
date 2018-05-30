@@ -267,7 +267,7 @@ def _gather_stats(demux, tmp):
                       unique_reads_hit_ref, reads_hit_ref,
                       unique_reads_missed_ref, reads_missed_ref))
 
-    df = pd.DataFrame(stats, columns=STATS_HEADER, dtype=str)
+    df = pd.DataFrame(stats, columns=STATS_HEADER, dtype=object)
     df = df.set_index('sample-id')
     return df.astype(int)
 
