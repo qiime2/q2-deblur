@@ -21,6 +21,7 @@ requirements:
     - python 3.5*
     - setuptools
     - pandas
+    - numpy < 1.14.0
     - deblur >=1.0.4
     - qiime2 {{ release }}.*
     - q2templates {{ release }}.*
