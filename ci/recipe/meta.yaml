@@ -22,6 +22,9 @@ requirements:
     - setuptools
     - pandas
     - numpy <1.14.0
+    # scipy isn't directly used in this plugin, but setting a version pin here
+    # because deblur doesn't currently work with modern scipy versions.
+    - scipy <1.1.0
     - deblur >=1.0.4
     - qiime2 {{ release }}.*
     - q2templates {{ release }}.*
