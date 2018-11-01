@@ -73,16 +73,16 @@ def _hash_ids(table):
 def denoise_16S(
         demultiplexed_seqs: SingleLanePerSampleSingleEndFastqDirFmt,
         trim_length: int,
-        sample_stats: bool=False,
-        mean_error: float=0.005,
-        indel_prob: float=0.01,
-        indel_max: int=3,
-        min_reads: int=10,
-        min_size: int=2,
-        jobs_to_start: int=1,
-        hashed_feature_ids: bool=True) -> (biom.Table,
-                                           DNAIterator,
-                                           pd.DataFrame):
+        sample_stats: bool = False,
+        mean_error: float = 0.005,
+        indel_prob: float = 0.01,
+        indel_max: int = 3,
+        min_reads: int = 10,
+        min_size: int = 2,
+        jobs_to_start: int = 1,
+        hashed_feature_ids: bool = True) -> (biom.Table,
+                                             DNAIterator,
+                                             pd.DataFrame):
     return _denoise_helper(
         sample_stats=sample_stats,
         demultiplexed_seqs=demultiplexed_seqs,
@@ -100,16 +100,16 @@ def denoise_other(
         demultiplexed_seqs: SingleLanePerSampleSingleEndFastqDirFmt,
         reference_seqs: DNAFASTAFormat,
         trim_length: int,
-        sample_stats: bool=False,
-        mean_error: float=0.005,
-        indel_prob: float=0.01,
-        indel_max: int=3,
-        min_reads: int=10,
-        min_size: int=2,
-        jobs_to_start: int=1,
-        hashed_feature_ids: bool=True) -> (biom.Table,
-                                           DNAIterator,
-                                           pd.DataFrame):
+        sample_stats: bool = False,
+        mean_error: float = 0.005,
+        indel_prob: float = 0.01,
+        indel_max: int = 3,
+        min_reads: int = 10,
+        min_size: int = 2,
+        jobs_to_start: int = 1,
+        hashed_feature_ids: bool = True) -> (biom.Table,
+                                             DNAIterator,
+                                             pd.DataFrame):
     return _denoise_helper(
         sample_stats=sample_stats,
         demultiplexed_seqs=demultiplexed_seqs,
@@ -127,17 +127,17 @@ def denoise_other(
 def _denoise_helper(
         demultiplexed_seqs: SingleLanePerSampleSingleEndFastqDirFmt,
         trim_length: int,
-        sample_stats: bool=False,
-        reference_seqs: DNAFASTAFormat=None,
-        mean_error: float=0.005,
-        indel_prob: float=0.01,
-        indel_max: int=3,
-        min_reads: int=10,
-        min_size: int=2,
-        jobs_to_start: int=1,
-        hashed_feature_ids: bool=True) -> (biom.Table,
-                                           DNAIterator,
-                                           pd.DataFrame):
+        sample_stats: bool = False,
+        reference_seqs: DNAFASTAFormat = None,
+        mean_error: float = 0.005,
+        indel_prob: float = 0.01,
+        indel_max: int = 3,
+        min_reads: int = 10,
+        min_size: int = 2,
+        jobs_to_start: int = 1,
+        hashed_feature_ids: bool = True) -> (biom.Table,
+                                             DNAIterator,
+                                             pd.DataFrame):
     _check_inputs(**locals())
     with tempfile.TemporaryDirectory() as tmp:
         seqs_fp = str(demultiplexed_seqs)
