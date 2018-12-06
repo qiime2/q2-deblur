@@ -21,10 +21,10 @@ requirements:
     - python 3.5*
     - setuptools
     - pandas
-    - numpy <1.14.0
+    - numpy >1.14.0
     # scipy isn't directly used in this plugin, but setting a version pin here
     # because deblur doesn't currently work with modern scipy versions.
-    - scipy <1.1.0
+    - scipy >1.1.0
     - deblur >=1.0.4
     # There are issues with 2.8.2, and no OS X builds exist after 2.7.0
     - vsearch <=2.7.0
