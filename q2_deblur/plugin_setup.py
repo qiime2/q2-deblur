@@ -47,6 +47,8 @@ _parameter_descriptions = {
                    'indels).'),
     'indel_max': "Maximum number of insertion/deletions.",
     'trim_length': "Sequence trim length, specify -1 to disable trimming.",
+    'left_trim_len': "Sequence trimming from the 5' end. A value of 0 will "
+                     "disable this trim.",
     'min_reads': ("Retain only features appearing at least min_reads "
                   "times across all samples in the resulting feature "
                   "table."),
@@ -70,6 +72,7 @@ _parameters = {
     'indel_prob': qiime2.plugin.Float,
     'indel_max': qiime2.plugin.Int,
     'trim_length': qiime2.plugin.Int,
+    'left_trim_len': qiime2.plugin.Int % qiime2.plugin.Range(0, None),
     'min_reads': qiime2.plugin.Int,
     'min_size': qiime2.plugin.Int,
     'jobs_to_start': qiime2.plugin.Int,

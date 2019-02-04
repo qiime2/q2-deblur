@@ -30,6 +30,7 @@ _NAT_NUM = (lambda x: x > 0, 'greater than zero')
 _SKIP = (lambda x: True, '')
 _valid_inputs = {
     'trim_length': _GTE_NEG_1,
+    'left_trim_len': _WHOLE_NUM,
     'mean_error': _NAT_NUM,
     'indel_prob': _NAT_NUM,
     'indel_max': _WHOLE_NUM,
@@ -73,6 +74,7 @@ def _hash_ids(table):
 def denoise_16S(
         demultiplexed_seqs: SingleLanePerSampleSingleEndFastqDirFmt,
         trim_length: int,
+        left_trim_len: int = 0,
         sample_stats: bool = False,
         mean_error: float = 0.005,
         indel_prob: float = 0.01,
@@ -90,6 +92,7 @@ def denoise_16S(
         indel_prob=indel_prob,
         indel_max=indel_max,
         trim_length=trim_length,
+        left_trim_len=left_trim_len,
         min_reads=min_reads,
         min_size=min_size,
         jobs_to_start=jobs_to_start,
@@ -100,6 +103,7 @@ def denoise_other(
         demultiplexed_seqs: SingleLanePerSampleSingleEndFastqDirFmt,
         reference_seqs: DNAFASTAFormat,
         trim_length: int,
+        left_trim_len: int = 0,
         sample_stats: bool = False,
         mean_error: float = 0.005,
         indel_prob: float = 0.01,
@@ -118,6 +122,7 @@ def denoise_other(
         indel_prob=indel_prob,
         indel_max=indel_max,
         trim_length=trim_length,
+        left_trim_len=left_trim_len,
         min_reads=min_reads,
         min_size=min_size,
         jobs_to_start=jobs_to_start,
@@ -127,6 +132,7 @@ def denoise_other(
 def _denoise_helper(
         demultiplexed_seqs: SingleLanePerSampleSingleEndFastqDirFmt,
         trim_length: int,
+        left_trim_len: int = 0,
         sample_stats: bool = False,
         reference_seqs: DNAFASTAFormat = None,
         mean_error: float = 0.005,
@@ -148,6 +154,7 @@ def _denoise_helper(
                '--indel-prob', str(indel_prob),
                '--indel-max', str(indel_max),
                '--trim-length', str(trim_length),
+               '--left-trim-length', str(left_trim_len),
                '--min-reads', str(min_reads),
                '--min-size', str(min_size),
                '--jobs-to-start', str(jobs_to_start),
