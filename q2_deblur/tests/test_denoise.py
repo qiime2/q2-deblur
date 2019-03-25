@@ -101,8 +101,17 @@ class TestDenoise16S(TestPluginBase):
         self.assertEqual(list(stats.columns), STATS_HEADER[1:])
         self.assertEqual(len(stats), 0)
 
+    def test_left_trim_len(self):
+        obs_tab, rep_seqs, stats = denoise_16S(self.demux_seqs, 110,
+                                               left_trim_len=10)
+
+        self.assertEqual(len(obs_tab.ids(axis='sample')), 16)
+        self.assertEqual(len(obs_tab.ids(axis='observation')), 20)
+        self.assertEqual(len(list(rep_seqs)), 20)
+        self.assertEqual(len(stats.index), 0)
+
     def test_all_reads_filtered(self):
-        with self.assertRaisesRegex(ValueError, 'filter'):
+        with self.assertRaisesRegex(ValueError, 'filter.*10000'):
             denoise_16S(self.demux_seqs, 10000)
 
     def test_bad_values_fail(self):
