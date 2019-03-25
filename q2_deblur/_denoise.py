@@ -179,7 +179,7 @@ def _denoise_helper(
                              "sequence, that all of the sequences are "
                              "artifacts like PhiX or adapter, or that the "
                              "positive reference used is not representative "
-                             "of the data being denoised.")
+                             "of the data being denoised." % trim_length)
 
         table = _load_table(tmp)
 
