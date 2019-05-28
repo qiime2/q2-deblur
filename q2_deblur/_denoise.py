@@ -292,7 +292,7 @@ def _fasta_counts(workingdir, sample_id, suffix):
 
     with open(os.path.join(path)) as fh:
         for seq_header, seq in itertools.zip_longest(*[fh] * 2):
-            # >foo stuff;size=123;
+            # >foo stuff;size=123;ee=.45;
             counts += int(re.search(r'(?<=size=)\w+', seq_header).group(0))
             unique += 1
         return unique, counts
