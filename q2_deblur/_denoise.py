@@ -11,6 +11,7 @@ import os
 import hashlib
 import gzip
 import itertools
+import re
 
 import numpy as np
 import biom
@@ -292,8 +293,7 @@ def _fasta_counts(workingdir, sample_id, suffix):
     with open(os.path.join(path)) as fh:
         for seq_header, seq in itertools.zip_longest(*[fh] * 2):
             # >foo stuff;size=123;
-            size = seq_header.rsplit(';', 2)[1]
-            counts += int(size.split('=')[1])
+            counts += int(re.search(r'(?<=size=)\w+', seq_header).group(0))
             unique += 1
         return unique, counts
 
