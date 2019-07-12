@@ -30,7 +30,8 @@ setup(
                             'data/expected/*',
                             'data/expected/util/*',
                             'data/sample_seqs_16S/*',
-                            'data/sample_seqs_other/*'],
+                            'data/sample_seqs_other/*',
+                            'data/sample_seqs_16S_underscore/*'],
     },
     zip_safe=False,
 )

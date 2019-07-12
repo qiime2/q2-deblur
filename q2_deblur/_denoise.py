@@ -148,6 +148,12 @@ def _denoise_helper(
     _check_inputs(**locals())
     with tempfile.TemporaryDirectory() as tmp:
         seqs_fp = str(demultiplexed_seqs)
+        with open(os.path.join(seqs_fp, 'MANIFEST')) as fh:
+            for line in fh:
+                if '_' in line.split(',')[0]:
+                    raise ValueError("Sample ids may not contain underscores, "
+                                     f"the id {line.split(',')[0]} contains "
+                                     "one or more underscores.")
         cmd = ['deblur', 'workflow',
                '--seqs-fp', seqs_fp,
                '--output-dir', tmp,

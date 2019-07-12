@@ -150,6 +150,13 @@ class TestDenoise16S(TestPluginBase):
         _, _, obs_stats = denoise_16S(self.demux_seqs, 100, sample_stats=True)
         pdt.assert_frame_equal(obs_stats, exp_stats)
 
+    def test_with_underscore_in_id(self):
+        bad_seqs = SingleLanePerSampleSingleEndFastqDirFmt(
+            self.get_data_path('sample_seqs_16S_underscore'), 'r')
+        with self.assertRaisesRegex(
+                ValueError, 'may not contain underscores.*L3S_313'):
+            denoise_16S(bad_seqs, 100, sample_stats=True)
+
 
 class TestDenoiseOther(TestPluginBase):
     # structure shamelessly adapted from q2-dada2
