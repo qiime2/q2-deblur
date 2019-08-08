@@ -154,7 +154,7 @@ class TestDenoise16S(TestPluginBase):
         bad_seqs = SingleLanePerSampleSingleEndFastqDirFmt(
             self.get_data_path('sample_seqs_16S_underscore'), 'r')
         with self.assertRaisesRegex(
-                ValueError, 'may not contain underscores.*L3S_313'):
+                ValueError, 'Deblur cannot.*L3S_313.'):
             denoise_16S(bad_seqs, 100, sample_stats=True)
 
 

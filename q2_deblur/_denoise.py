@@ -148,10 +148,13 @@ def _denoise_helper(
     _check_inputs(**locals())
     with tempfile.TemporaryDirectory() as tmp:
         df = demultiplexed_seqs.manifest.view(pd.DataFrame)
-        for id in df.index:
-            if '_' in id:
-                raise ValueError("Sample IDs may not contain underscores, the "
-                                 f"ID {id} contains one or more underscores.")
+        ids_with_underscores = df[df.index.str.contains('_')].index.tolist()
+        if ids_with_underscores:
+            ids_with_underscores = ', '.join(ids_with_underscores)
+            raise ValueError("Deblur cannot operate on sample IDs that "
+                             "contain underscores. The following ID(s) "
+                             "contain one or more underscores: "
+                             f"{ids_with_underscores}.")
         seqs_fp = str(demultiplexed_seqs)
         cmd = ['deblur', 'workflow',
                '--seqs-fp', seqs_fp,
