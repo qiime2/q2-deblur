@@ -155,7 +155,7 @@ class TestDenoise16S(TestPluginBase):
             self.get_data_path('sample_seqs_16S_underscore'), 'r')
         with self.assertRaisesRegex(
                 ValueError, 'Deblur cannot.*L3S_313.'):
-            denoise_16S(bad_seqs, 100, sample_stats=True)
+            denoise_16S(bad_seqs, 100)
 
 
 class TestDenoiseOther(TestPluginBase):
