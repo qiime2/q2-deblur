@@ -146,6 +146,14 @@ def _denoise_helper(
                                              DNAIterator,
                                              pd.DataFrame):
     _check_inputs(**locals())
+    df = demultiplexed_seqs.manifest.view(pd.DataFrame)
+    ids_with_underscores = df[df.index.str.contains('_')].index.tolist()
+    if ids_with_underscores:
+        ids_with_underscores = ', '.join(ids_with_underscores)
+        raise ValueError("Deblur cannot operate on sample IDs that "
+                         "contain underscores. The following ID(s) "
+                         "contain one or more underscores: "
+                         f"{ids_with_underscores}.")
     with tempfile.TemporaryDirectory() as tmp:
         seqs_fp = str(demultiplexed_seqs)
         cmd = ['deblur', 'workflow',
