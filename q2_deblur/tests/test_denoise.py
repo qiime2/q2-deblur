@@ -157,6 +157,17 @@ class TestDenoise16S(TestPluginBase):
                 ValueError, 'Deblur cannot.*L3S_313.'):
             denoise_16S(bad_seqs, 100)
 
+    def test_integer_ids(self):
+        int_seqs = SingleLanePerSampleSingleEndFastqDirFmt(
+            self.get_data_path('sample_seqs_integers'), 'r')
+
+        obs_tab, _, stats = denoise_16S(int_seqs, 100)
+
+        # TODO: test Sample IDs in table and stats
+
+    def test_integer_ids_with_underscores(self):
+        pass
+
 
 class TestDenoiseOther(TestPluginBase):
     # structure shamelessly adapted from q2-dada2
