@@ -161,12 +161,17 @@ class TestDenoise16S(TestPluginBase):
         int_seqs = SingleLanePerSampleSingleEndFastqDirFmt(
             self.get_data_path('sample_seqs_integers'), 'r')
 
-        obs_tab, _, stats = denoise_16S(int_seqs, 100)
+        obs_tab, _, stats = denoise_16S(int_seqs, 100, sample_stats=True)
 
-        # TODO: test Sample IDs in table and stats
+        self.assertEqual(set(obs_tab.ids()), {'100', '101', '103', '104'})
+        self.assertEqual(set(stats.index.values), {'100', '101', '103', '104'})
 
     def test_integer_ids_with_underscores(self):
-        pass
+        bad_seqs = SingleLanePerSampleSingleEndFastqDirFmt(
+            self.get_data_path('sample_seqs_integers_underscore'), 'r')
+        with self.assertRaisesRegex(
+                ValueError, 'Deblur cannot.*100_100.'):
+            denoise_16S(bad_seqs, 100)
 
 
 class TestDenoiseOther(TestPluginBase):
