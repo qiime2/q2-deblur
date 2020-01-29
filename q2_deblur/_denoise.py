@@ -147,7 +147,8 @@ def _denoise_helper(
                                              pd.DataFrame):
     _check_inputs(**locals())
     df = demultiplexed_seqs.manifest.view(pd.DataFrame)
-    ids_with_underscores = df[df.index.str.contains('_')].index.tolist()
+    ids_with_underscores = df.index.astype(str).str.contains('_')
+    ids_with_underscores = df[ids_with_underscores].index.tolist()
     if ids_with_underscores:
         ids_with_underscores = ', '.join(ids_with_underscores)
         raise ValueError("Deblur cannot operate on sample IDs that "
