@@ -47,4 +47,4 @@ jobs:
       with:
         package-name: q2-deblur
         build-target: staging
-        additional-tests: py.test --pyargs q2_deblur
+        additional-tests: py.test --pyargs q2_deblur --capture=tee-sys
