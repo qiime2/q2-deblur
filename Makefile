@@ -9,10 +9,10 @@ lint:
 	flake8
 
 test: all
-	nosetests
+	py.test
 
 test-cov: all
-	nosetests
+	py.test
 
 install: all
 	$(PYTHON) setup.py install
