@@ -13,7 +13,7 @@ import unittest
 import skbio
 import biom
 import pandas as pd
-import pandas.util.testing as pdt
+import pandas.testing as pdt
 from qiime2 import Artifact
 from qiime2.plugin.testing import TestPluginBase
 from q2_types.per_sample_sequences import (
@@ -183,7 +183,7 @@ class TestDenoiseOther(TestPluginBase):
         self.demux_seqs = SingleLanePerSampleSingleEndFastqDirFmt(
             self.get_data_path('sample_seqs_other'), 'r')
         self.ref_ar = Artifact.load(
-            self.get_data_path('../../assets/test_reference.qza'))
+            self.get_data_path('test_reference.qza'))
         self.ref = self.ref_ar.view(DNAFASTAFormat)
 
     def test_defaults(self):
