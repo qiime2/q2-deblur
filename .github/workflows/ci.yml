@@ -51,5 +51,5 @@ jobs:
       with:
         package-name: q2-deblur
         build-target: tested
-        additional-tests: py.test --pyargs q2_deblur
+        # additional-tests: py.test --pyargs q2_deblur
         library-token: ${{ secrets.LIBRARY_TOKEN }}
