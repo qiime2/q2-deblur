@@ -22,7 +22,8 @@ requirements:
     - pandas
     - numpy
     - deblur >=1.0.4
-    # There are issues with 2.8.2, and no OS X builds exist after 2.7.0
+    # deblur doesn't currently work with click 8, so pinning here.
+    - click >=7,<8
     - vsearch <=2.7.0
     - qiime2 {{ release }}.*
     - q2templates {{ release }}.*
