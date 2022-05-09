@@ -18,7 +18,7 @@ requirements:
 
   run:
     - python {{ python }}
-    - pandas
+    - pandas {{ pandas }}
     - numpy
     - deblur >=1.0.4
     # deblur doesn't currently work with click 8, so pinning here.
