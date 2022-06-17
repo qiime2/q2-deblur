@@ -38,9 +38,6 @@ test:
     - q2_deblur
     - qiime2.plugins.deblur
 
-  commands:
-    - pytest --pyargs deblur
-
 about:
   home: https://qiime2.org
   license: BSD-3-Clause
