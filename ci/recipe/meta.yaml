@@ -21,8 +21,7 @@ requirements:
     - pandas {{ pandas }}
     - numpy
     - deblur >=1.0.4
-    # deblur doesn't currently work with click 8, so pinning here.
-    - click >=7,<8
+    - click >=8.1
     - vsearch <=2.7.0
     - qiime2 {{ qiime2_epoch }}.*
     - q2templates {{ qiime2_epoch }}.*
