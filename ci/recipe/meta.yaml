@@ -22,7 +22,7 @@ requirements:
     - numpy
     - deblur >=1.0.4
     - click >=8.1
-    - vsearch <=2.7.0
+    - vsearch
     - qiime2 {{ qiime2_epoch }}.*
     - q2templates {{ qiime2_epoch }}.*
     - q2-types {{ qiime2_epoch }}.*
@@ -32,11 +32,16 @@ test:
     - qiime2 >={{ qiime2 }}
     - q2templates >={{ q2templates }}
     - q2-types >={{ q2_types }}
-    - pytest
+    - nose
 
   imports:
     - q2_deblur
     - qiime2.plugins.deblur
+
+  # uncomment and remove run_test.sh when 1.1.2 lands (which should include:
+  # https://github.com/biocore/deblur/pull/216)
+  # commands:
+  #   - pytest --pyargs deblur
 
 about:
   home: https://qiime2.org
