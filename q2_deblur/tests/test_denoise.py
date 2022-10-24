@@ -222,5 +222,12 @@ class TestDenoiseOther(TestPluginBase):
             denoise_other(self.demux_seqs, self.ref, 100, min_reads=-1)
 
 
+class TestUsageExamples(TestPluginBase):
+    package = 'q2_dada2.tests'
+
+    def test_examples(self):
+        self.execute_examples()
+
+
 if __name__ == '__main__':
     unittest.main()
