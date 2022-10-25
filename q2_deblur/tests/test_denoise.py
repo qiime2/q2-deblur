@@ -223,7 +223,7 @@ class TestDenoiseOther(TestPluginBase):
 
 
 class TestUsageExamples(TestPluginBase):
-    package = 'q2_dada2.tests'
+    package = 'q2_deblur.tests'
 
     def test_examples(self):
         self.execute_examples()
