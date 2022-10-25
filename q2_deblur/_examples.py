@@ -8,6 +8,7 @@
 
 m_p_base = 'https://docs.qiime2.org/{epoch}/data/tutorials/moving-pictures/'
 demuxed_seqs_url = m_p_base + 'demux-filtered.qza'
+denoise_stats_url = m_p_base + 'deblur-stats.qza'
 
 def denoise_16S_example(use):
     demuxed = use.init_artifact_from_url('demux-filtered', demuxed_seqs_url)
@@ -29,3 +30,19 @@ def denoise_16S_example(use):
     rep_seqs.assert_output_type('FeatureData[Sequence]')
     table.assert_output_type('FeatureTable[Frequency]')
     stats.assert_output_type('SampleData[DeblurStats]')
+
+
+def visualize_stats_example(use):
+    stats = use.init_artifact_from_url('deblur-stats', denoise_stats_url)
+
+    viz, = use.action(
+        use.UsageAction('deblur', 'visualize_stats'),
+        use.UsageInputs(
+            deblur_stats=stats
+        ),
+        use.UsageOutputNames(
+            visualization='deblur-stats'
+        )
+    )
+
+    viz.assert_output_type('Visualization')

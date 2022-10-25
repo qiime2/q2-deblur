@@ -157,7 +157,10 @@ plugin.visualizers.register_function(
     },
     parameter_descriptions={},
     name='Visualize Deblur stats per sample.',
-    description='Display Deblur statistics per sample'
+    description='Display Deblur statistics per sample',
+    examples={
+        'visualize_stats': ex.visualize_stats_example,
+    },
 )
 
 importlib.import_module('q2_deblur._transformer')
