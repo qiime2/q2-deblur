@@ -10,6 +10,7 @@ m_p_base = 'https://docs.qiime2.org/{epoch}/data/tutorials/moving-pictures/'
 demuxed_seqs_url = m_p_base + 'demux-filtered.qza'
 denoise_stats_url = m_p_base + 'deblur-stats.qza'
 
+
 def denoise_16S_example(use):
     demuxed = use.init_artifact_from_url('demux-filtered', demuxed_seqs_url)
 
