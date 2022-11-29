@@ -20,7 +20,7 @@ requirements:
     - python {{ python }}
     - pandas {{ pandas }}
     - numpy
-    - deblur >=1.0.4
+    - deblur >=1.1.2
     - click >=8.1
     - vsearch
     - qiime2 {{ qiime2_epoch }}.*
