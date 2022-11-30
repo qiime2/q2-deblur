@@ -5,4 +5,3 @@ nosetests --with-doctest deblur-upstream
 rm -rf deblur-upstream
 
 py.test --pyargs q2_deblur
-rm -rf q2_deblur
