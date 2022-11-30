@@ -42,7 +42,6 @@ test:
   # https://github.com/biocore/deblur/pull/216)
   # commands:
   #   - pytest --pyargs deblur
-  additional-tests: py.test --pyargs q2_deblur
 
 about:
   home: https://qiime2.org
