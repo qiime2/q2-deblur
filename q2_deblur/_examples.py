@@ -44,7 +44,7 @@ def visualize_stats_example(use):
             deblur_stats=stats
         ),
         use.UsageOutputNames(
-            visualization='deblur-stats'
+            visualization='deblur-stats-viz'
         )
     )
 
