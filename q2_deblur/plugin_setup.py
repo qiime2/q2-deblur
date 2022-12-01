@@ -13,6 +13,7 @@ from q2_types.sample_data import SampleData
 from q2_types.per_sample_sequences import (SequencesWithQuality,
                                            PairedEndSequencesWithQuality,
                                            JoinedSequencesWithQuality)
+import q2_deblur._examples as ex
 
 import q2_deblur
 
@@ -110,7 +111,10 @@ plugin.methods.register_function(
                  'platform. The reference is only used to assess whether each '
                  'sequence is likely to be 16S by a local alignment using '
                  'SortMeRNA with a permissive e-value; the reference is not '
-                 'used to characterize the sequences.')
+                 'used to characterize the sequences.'),
+    examples={
+        'denoise_16S': ex.denoise_16S_example
+    },
 )
 
 
@@ -153,7 +157,10 @@ plugin.visualizers.register_function(
     },
     parameter_descriptions={},
     name='Visualize Deblur stats per sample.',
-    description='Display Deblur statistics per sample'
+    description='Display Deblur statistics per sample',
+    examples={
+        'visualize_stats': ex.visualize_stats_example,
+    },
 )
 
 importlib.import_module('q2_deblur._transformer')
