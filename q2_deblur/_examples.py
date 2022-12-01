@@ -32,7 +32,7 @@ def denoise_16S_example(use):
 
     rep_seqs.assert_output_type('FeatureData[Sequence]')
     table.assert_output_type('FeatureTable[Frequency]')
-    stats.assert_output_type('SampleData[DeblurStats]')
+    stats.assert_output_type('DeblurStats')
 
 
 def visualize_stats_example(use):
