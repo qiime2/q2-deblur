@@ -6,12 +6,11 @@
 # The full license is in the file LICENSE, distributed with this software.
 # ----------------------------------------------------------------------------
 
-import qiime2
 
-epoch = qiime2.__release__
-m_p_base = f'https://docs.qiime2.org/{epoch}/data/tutorials/moving-pictures/'
-demuxed_seqs_url = m_p_base + 'demux-filtered.qza'
-denoise_stats_url = m_p_base + 'deblur-stats.qza'
+demuxed_seqs_url = ('https://data.qiime2.org/usage-examples/'
+                    'moving-pictures/demux-filtered.qza')
+denoise_stats_url = ('https://data.qiime2.org/usage-examples/'
+                     'moving-pictures/deblur-stats.qza')
 
 
 def denoise_16S_example(use):
