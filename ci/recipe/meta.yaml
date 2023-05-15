@@ -28,9 +28,6 @@ requirements:
     - q2-types {{ qiime2_epoch }}.*
 
 test:
-  commands:
-    - py.test --pyargs q2_deblur  
-
   requires:
     - qiime2 >={{ qiime2 }}
     - q2templates >={{ q2templates }}
@@ -40,6 +37,9 @@ test:
   imports:
     - q2_deblur
     - qiime2.plugins.deblur
+
+  commands:
+    - py.test --pyargs q2_deblur  
 
   # uncomment and remove run_test.sh when 1.1.2 lands (which should include:
   # https://github.com/biocore/deblur/pull/216)
