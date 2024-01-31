@@ -76,7 +76,7 @@ _parameters = {
     'left_trim_len': qiime2.plugin.Int % qiime2.plugin.Range(0, None),
     'min_reads': qiime2.plugin.Int,
     'min_size': qiime2.plugin.Int,
-    'jobs_to_start': qiime2.plugin.Int,
+    'jobs_to_start': qiime2.plugin.Threads,
     'hashed_feature_ids': qiime2.plugin.Bool,
     'sample_stats': qiime2.plugin.Bool
 }
