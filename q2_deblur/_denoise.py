@@ -18,7 +18,7 @@ import biom
 import skbio
 import pandas as pd
 
-from qiime2.sdk.util import get_available_cores
+from qiime2.plugin import get_available_cores
 from q2_types.per_sample_sequences import \
         SingleLanePerSampleSingleEndFastqDirFmt, FastqGzFormat
 from q2_types.feature_data import (DNAIterator, DNAFASTAFormat)
