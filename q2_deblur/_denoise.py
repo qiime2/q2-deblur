@@ -17,6 +17,8 @@ import numpy as np
 import biom
 import skbio
 import pandas as pd
+
+from qiime2.plugin import get_available_cores
 from q2_types.per_sample_sequences import \
         SingleLanePerSampleSingleEndFastqDirFmt, FastqGzFormat
 from q2_types.feature_data import (DNAIterator, DNAFASTAFormat)
@@ -37,7 +39,7 @@ _valid_inputs = {
     'indel_max': _WHOLE_NUM,
     'min_reads': _WHOLE_NUM,
     'min_size': _WHOLE_NUM,
-    'jobs_to_start': _NAT_NUM,
+    'jobs_to_start': _WHOLE_NUM,
     'hashed_feature_ids': _SKIP,
     'demultiplexed_seqs': _SKIP,
     'reference_seqs': _SKIP,
@@ -145,6 +147,9 @@ def _denoise_helper(
         hashed_feature_ids: bool = True) -> (biom.Table,
                                              DNAIterator,
                                              pd.DataFrame):
+    if jobs_to_start == 0:
+        jobs_to_start = get_available_cores()
+
     _check_inputs(**locals())
     df = demultiplexed_seqs.manifest.view(pd.DataFrame)
     ids_with_underscores = df.index.astype(str).str.contains('_')
