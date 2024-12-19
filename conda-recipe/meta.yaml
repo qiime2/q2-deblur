@@ -1,0 +1,41 @@
+package:
+  name: q2-deblur
+  version: {{ PLUGIN_VERSION }}
+source:
+  path: ..
+build:
+  script: make install
+requirements:
+  host:
+  - python {{ python }}
+  - setuptools
+  - versioningit
+  - wheel
+  run:
+  - python {{ python }}
+  - pandas {{ pandas }}
+  - numpy
+  - deblur >=1.0.4
+  - click >=8.1
+  - vsearch <2.23.0
+  - qiime2 {{ qiime2_epoch }}.*
+  - q2templates {{ qiime2_epoch }}.*
+  - q2-types {{ qiime2_epoch }}.*
+  build:
+  - setuptools
+  - versioningit
+test:
+  requires:
+  - qiime2 >={{ qiime2 }}
+  - q2templates >={{ q2templates }}
+  - q2-types >={{ q2_types }}
+  - nose
+  imports:
+  - q2_deblur
+  - qiime2.plugins.deblur
+  commands:
+  - py.test --pyargs q2_deblur
+about:
+  home: https://qiime2.org
+  license: BSD-3-Clause
+  license_family: BSD

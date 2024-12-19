@@ -1,0 +1,12 @@
+# Changes here will be overwritten by Copier; NEVER EDIT MANUALLY
+_commit: dfb0404
+_src_path: https://github.com/qiime2/q2-setup-template.git
+module_name: deblur
+plugin_name: q2_deblur
+plugin_scripts: null
+project_author_email: wasade@gmail.com
+project_author_name: Daniel McDonald
+project_description: Sequence quality control with deblur
+project_name: q2-deblur
+project_urls_homepage: null
+project_urls_repository: https://github.com/qiime2/q2-deblur
