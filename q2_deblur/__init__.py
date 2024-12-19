@@ -9,8 +9,6 @@
 from ._denoise import denoise_16S, denoise_other
 from ._viz_stats import visualize_stats
 
-
-
 try:
     from ._version import __version__
 except ModuleNotFoundError:
