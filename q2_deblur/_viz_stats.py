@@ -6,9 +6,9 @@
 # The full license is in the file LICENSE, distributed with this software.
 # ----------------------------------------------------------------------------
 
+import importlib.resources
 import re
 import os
-import pkg_resources
 import shutil
 
 import pandas as pd
@@ -16,7 +16,7 @@ import q2templates
 
 from q2_deblur._format import STATS_DESCRIPTIONS
 
-TEMPLATES = pkg_resources.resource_filename('q2_deblur', 'assets')
+TEMPLATES = importlib.resources.files('q2_deblur') / 'assets'
 
 COMPUTED_DESCRIPTIONS = {
     'fraction-artifact': ('The fraction of reads which appear to be '
