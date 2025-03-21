@@ -18,9 +18,9 @@ requirements:
   - deblur >=1.0.4
   - click >=8.1
   - vsearch {{ vsearch }}
-  - qiime2 {{ qiime2_epoch }}.*
-  - q2templates {{ qiime2_epoch }}.*
-  - q2-types {{ qiime2_epoch }}.*
+  - qiime2 >={{ qiime2 }}
+  - q2templates >={{ q2templates }}
+  - q2-types >={{ q2_types }}
   build:
   - python {{ python }}
   - setuptools
