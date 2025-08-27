@@ -15,8 +15,8 @@ requirements:
   - python {{ python }}
   - pandas {{ pandas }}
   - numpy
-  - deblur >=1.0.4
-  - click >=8.1
+  - deblur {{ deblur }}
+  - click {{ click }}
   - vsearch {{ vsearch }}
   - qiime2 >={{ qiime2 }}
   - q2templates >={{ q2templates }}
